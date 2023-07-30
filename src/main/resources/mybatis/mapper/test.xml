@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newlecture.web.dao.TestDao">
+	<select id="getMember" resultType="com.newlecture.web.entity.TestEntity">
+		select * from member
+	</select>
+	
+	<select id="isMember" parameterType="com.newlecture.web.entity.TestEntity" resultType="int">
+		select count(*) from member
+		where mb_id = #{mb_id} 
+		and mb_pw = #{mb_pw}
+	</select>
+</mapper>

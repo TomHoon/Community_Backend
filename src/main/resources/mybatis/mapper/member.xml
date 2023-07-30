@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newlecture.web.dao.MemberDao">
+	<select id="getMemberAll" resultType="com.newlecture.web.entity.MemberEntity">
+		select * from member_tb
+	</select>
+	
+	<select id="loginMember" parameterType="com.newlecture.web.entity.MemberEntity">
+		select count(*) from member_tb
+		where member_id = #{member_id}
+		and member_pw = #{member_pw}
+	</select>
+	
+	<insert id="joinMember" parameterType="com.newlecture.web.entity.MemberEntity">
+		INSERT INTO member_tb
+			(member_idx,
+			member_id,
+			member_pw,
+			member_name,
+			member_nickname,
+			member_phone,
+			member_email,
+			member_reg_date,
+			member_amnd_date,
+			member_address,
+			member_del_yn)
+			VALUES
+			(
+			#{member_idx},
+			#{member_id},
+			#{member_pw},
+			#{member_name},
+			#{member_nickname},
+			#{member_phone},
+			#{member_email},
+			#{member_reg_date},
+			#{member_amnd_date},
+			#{member_address},
+			#{member_del_yn}
+			);
+					
+	</insert>
+</mapper>
