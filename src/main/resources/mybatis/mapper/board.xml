@@ -32,4 +32,27 @@
 			#{hit}		    
 		 );
 	</insert>
+	<delete id="deleteBoard" parameterType="com.newlecture.web.entity.BoardEntity">
+		delete from board where id = #{id};
+	</delete>
+	<update id="updateBoard" parameterType="com.newlecture.web.entity.BoardEntity">
+		update board set 
+			gubun = #{gubun},
+			title = #{title},
+			content = #{content}
+		where 
+			id = #{id}
+	</update>
+	<update id="upateHitBoard" parameterType="com.newlecture.web.entity.BoardEntity">
+		update board set 
+			hit = #{hit} + 1
+		where 
+			id = #{id}
+	</update>
+	<update id="upateRecommendBoard" parameterType="com.newlecture.web.entity.BoardEntity">
+		update board set 
+			recommend = #{recommend} + 1
+		where 
+			id = #{id}
+	</update>
 </mapper>

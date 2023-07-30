@@ -12,4 +12,8 @@ public interface BoardDao {
 	public List<BoardEntity> getBoardAll();
 	public List<BoardEntity> searchBoard(BoardEntity bEnt);
 	public int addBoard(BoardEntity bEnt);
+	public int deleteBoard(BoardEntity bEnt);
+	public int updateBoard(BoardEntity bEnt);
+	public int updateHitBoard(BoardEntity bEnt);
+	public int updateRecommendHitBoard(BoardEntity bEnt);
 }

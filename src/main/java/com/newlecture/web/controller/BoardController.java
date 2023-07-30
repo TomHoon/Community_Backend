@@ -33,4 +33,22 @@ public class BoardController {
 		List<BoardEntity> list = bDao.searchBoard(bEntity);
 		return list;
 	}
+	
+	@PostMapping("/updateBoard")
+	public int updateBoard(BoardEntity bEntity) {
+		int result = bDao.updateBoard(bEntity);
+		return result;
+	}
+	
+	@PostMapping("/updateHitBoard")
+	public int updateHitBoard(BoardEntity bEntity) {
+		int result = bDao.updateHitBoard(bEntity);
+		return result;
+	}
+	
+	@PostMapping("/updateRecommendBoard")
+	public int updateRecommendBoard(BoardEntity bEntity) {
+		int result = bDao.updateRecommendHitBoard(bEntity);
+		return result;
+	}
 }
