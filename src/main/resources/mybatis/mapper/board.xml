@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newlecture.web.dao.BoardDao">
+	<select id="getBoardAll" resultType="com.newlecture.web.entity.BoardEntity">
+		select * from board
+	</select>
+	
+	<select id="searchBoard" parameterType="com.newlecture.web.entity.BoardEntity">
+		select * from board
+		where title = #{title}
+	</select>
+	
+	<insert id="addBoard" parameterType="com.newlecture.web.entity.BoardEntity">
+		insert into board(
+			member_id, 
+			gubun, 
+			title, 
+			content, 
+			writer, 
+			recommend, 
+			hit
+		)
+		values (
+			#{member_id},
+		    #{gubun},
+		    #{title},
+		    #{content},
+		    #{writer},
+		    #{recomment},
+			#{hit}		    
+		 );
+	</insert>
+</mapper>
