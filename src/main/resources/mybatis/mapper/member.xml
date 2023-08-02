@@ -35,8 +35,8 @@
 			#{member_nickname},
 			#{member_phone},
 			#{member_email},
-			#{member_reg_date},
-			#{member_amnd_date},
+			now(),
+			now(),
 			#{member_address},
 			#{member_del_yn}
 			);
