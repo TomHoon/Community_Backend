@@ -9,7 +9,7 @@ import com.newlecture.web.entity.MemberEntity;
 
 @Mapper
 public interface BoardDao {
-	public List<BoardEntity> getBoardAll();
+	public List<BoardEntity> getBoardAll(BoardEntity bEnt);
 	public List<BoardEntity> searchBoard(BoardEntity bEnt);
 	public int addBoard(BoardEntity bEnt);
 	public int deleteBoard(BoardEntity bEnt);

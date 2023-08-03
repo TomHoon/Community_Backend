@@ -9,6 +9,7 @@ public class BoardEntity {
 	String writer;
 	String recommend;
 	String hit;
+	String order;
 	
 	public String getId() {
 		return id;
@@ -57,6 +58,12 @@ public class BoardEntity {
 	}
 	public void setHit(String hit) {
 		this.hit = hit;
+	}
+	public String getOrder() {
+		return order;
+	}
+	public void setOrder(String order) {
+		this.order = order;
 	}
 	
 	
