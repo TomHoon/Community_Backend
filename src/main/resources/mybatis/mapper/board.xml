@@ -19,6 +19,11 @@
 		where title = #{title}
 	</select>
 	
+	<select id="getBoardById" parameterType="com.newlecture.web.entity.BoardEntity">
+		select * from board
+		where id = #{id}
+	</select>
+	
 	<insert id="addBoard" parameterType="com.newlecture.web.entity.BoardEntity">
 		insert into board(
 			member_id, 
@@ -27,7 +32,8 @@
 			content, 
 			writer, 
 			recommend, 
-			hit
+			hit,
+			image_path
 		)
 		values (
 			#{member_id},
@@ -36,7 +42,8 @@
 		    #{content},
 		    #{writer},
 		    #{recommend},
-			#{hit}		    
+			#{hit},
+			#{image_path}	    
 		 );
 	</insert>
 	<delete id="deleteBoard" parameterType="com.newlecture.web.entity.BoardEntity">
@@ -56,7 +63,7 @@
 		where 
 			id = #{id}
 	</update>
-	<update id="updateRecommendBoard" parameterType="com.newlecture.web.entity.BoardEntity">
+	<update id="updateRecommendHitBoard" parameterType="com.newlecture.web.entity.BoardEntity">
 		update board set 
 			recommend = recommend + 1
 		where 

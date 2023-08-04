@@ -16,4 +16,6 @@ public interface BoardDao {
 	public int updateBoard(BoardEntity bEnt);
 	public int updateHitBoard(BoardEntity bEnt);
 	public int updateRecommendHitBoard(BoardEntity bEnt);
+	public void pushImage(BoardEntity bEnt);
+	public BoardEntity getBoardById(BoardEntity bEnt);
 }

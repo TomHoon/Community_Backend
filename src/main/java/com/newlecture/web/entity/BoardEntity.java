@@ -10,6 +10,7 @@ public class BoardEntity {
 	String recommend;
 	String hit;
 	String order;
+	String image_path;
 	
 	public String getId() {
 		return id;
@@ -65,6 +66,10 @@ public class BoardEntity {
 	public void setOrder(String order) {
 		this.order = order;
 	}
-	
-	
+	public String getImage_path() {
+		return image_path;
+	}
+	public void setImage_path(String image_path) {
+		this.image_path = image_path;
+	}
 }
