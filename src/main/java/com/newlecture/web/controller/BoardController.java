@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -78,6 +79,37 @@ public class BoardController {
 		int result = bDao.updateRecommendHitBoard(bEntity);
 		return result;
 	}
+	@PostMapping("/tempImg")
+	public String tempImg(@RequestParam MultipartFile mFile) throws IllegalStateException, IOException {
+		// 시간과 originalFilename으로 매핑 시켜서 src 주소를 만들어 낸다.
+        Date date = new Date();
+        StringBuilder sb = new StringBuilder();
+        
+     // file image 가 없을 경우
+        if (mFile.isEmpty()) {
+       	 sb.append("none");
+       	 return "none";
+        } else {
+       	 sb.append(date.getTime());
+       	 sb.append(mFile.getOriginalFilename());
+        }
+
+        if (!mFile.isEmpty()) {
+//        	◆◆로컬
+//    	    File dest = new File("C://images/" + sb.toString());
+//        	File dest = new File("C://Users//gnsdl//Desktop//test//public/" + sb.toString());
+        	
+//        	◆◆운영서버
+        	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
+        	
+        	// error throw 함
+        	mFile.transferTo(dest); 
+        }
+//        BoardEntity bEnt = new BoardEntity();
+//        bEnt.setImage_path("/upload/" + sb.toString());
+//        return sb.toString(); // 로컬테스트
+		return "/upload/" + sb.toString();
+	}
 	
 //	@PostMapping("/pushImage")
 	@PostMapping("/addBoard")
@@ -133,3 +165,4 @@ public class BoardController {
         return new ResponseEntity<Resource>(resource, header, HttpStatus.OK);
     }
 }
+
