@@ -36,7 +36,7 @@
 			image_path
 		)
 		values (
-			#{member_id},
+			#{member_idx},
 		    #{gubun},
 		    #{title},
 		    #{content},
