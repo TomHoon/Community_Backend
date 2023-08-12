@@ -15,7 +15,8 @@
 	
 	<insert id="joinMember" parameterType="com.newlecture.web.entity.MemberEntity">
 		INSERT INTO member_tb
-			(member_idx,
+			(
+			member_idx,
 			member_id,
 			member_pw,
 			member_name,
@@ -25,7 +26,9 @@
 			member_reg_date,
 			member_amnd_date,
 			member_address,
-			member_del_yn)
+			member_del_yn,
+			file_idx
+			)
 			VALUES
 			(
 			#{member_idx},
@@ -38,8 +41,31 @@
 			now(),
 			now(),
 			#{member_address},
-			#{member_del_yn}
+			#{member_del_yn},
+			#{file_idx}
 			);
 					
 	</insert>
+	
+	<insert id="insertFile" parameterType="com.newlecture.web.entity.FileEntity">
+		INSERT INTO file_tb
+			(
+			file_name,
+			file_path
+			)
+			VALUES
+			(
+			#{file_name},
+			#{file_path}
+			);
+					
+	</insert>
+	<select id="getFileData" parameterType="com.newlecture.web.entity.FileEntity">
+		SELECT * FROM file_tb
+		WHERE 
+			file_name = #{file_name}
+		AND
+			file_path = #{file_path}
+		limit 1
+	</select> 
 </mapper>

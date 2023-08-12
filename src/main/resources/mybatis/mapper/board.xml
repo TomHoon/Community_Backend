@@ -16,7 +16,10 @@
 	
 	<select id="searchBoard" parameterType="com.newlecture.web.entity.BoardEntity">
 		select * from board
-		where title = #{title}
+		<if test='!title.equals("")'>
+		   where title LIKE '%${title}%'
+		</if>
+		
 	</select>
 	
 	<select id="getBoardById" parameterType="com.newlecture.web.entity.BoardEntity">
@@ -33,7 +36,9 @@
 			writer, 
 			recommend, 
 			hit,
-			image_path
+			image_path,
+			reg_date,
+			amnd_date
 		)
 		values (
 			#{member_id},
@@ -43,7 +48,9 @@
 		    #{writer},
 		    #{recommend},
 			#{hit},
-			#{image_path}	    
+			#{image_path},
+			now(),
+			now() 
 		 );
 	</insert>
 	<delete id="deleteBoard" parameterType="com.newlecture.web.entity.BoardEntity">

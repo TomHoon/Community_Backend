@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newlecture.web.dao.BoardDao;
 import com.newlecture.web.entity.BoardEntity;
@@ -74,6 +76,12 @@ public class BoardController {
 		return result;
 	}
 	
+	@PostMapping("/deleteBoard")
+	public int deleteBoard(@RequestBody BoardEntity bEntity) {
+		int result = bDao.deleteBoard(bEntity);
+		return result;
+	}
+	
 	@PostMapping("/updateRecommendBoard")
 	public int updateRecommendBoard(@RequestBody BoardEntity bEntity) {
 		int result = bDao.updateRecommendHitBoard(bEntity);
@@ -100,48 +108,77 @@ public class BoardController {
 //        	File dest = new File("C://Users//gnsdl//Desktop//test//public/" + sb.toString());
         	
 //        	◆◆운영서버
-        	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
+//        	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
+        	File dest = new File("/gnsdl2846/tomcat/webapps/ROOT/WEB-INF/classes/static/" + sb.toString());
+        	
         	
         	// error throw 함
         	mFile.transferTo(dest); 
         }
 //        BoardEntity bEnt = new BoardEntity();
 //        bEnt.setImage_path("/upload/" + sb.toString());
-//        return sb.toString(); // 로컬테스트
-		return "/upload/" + sb.toString();
+        return sb.toString(); // 로컬테스트
+//		return "/upload/" + sb.toString();
 	}
 	
 //	@PostMapping("/pushImage")
 	@PostMapping("/addBoard")
-	public int pushImage(@RequestPart MultipartFile uploadFile, @RequestPart String param) throws IllegalStateException, IOException {
+	public int pushImage(@RequestPart(required = false)  MultipartFile uploadFile, @RequestPart String param) throws JsonMappingException, JsonProcessingException {
         // 시간과 originalFilename으로 매핑 시켜서 src 주소를 만들어 낸다.
         Date date = new Date();
         StringBuilder sb = new StringBuilder();
         
         ObjectMapper mapper = new ObjectMapper();
-        BoardEntity bEnt = mapper.readValue(param, BoardEntity.class);
-        
-        // file image 가 없을 경우
-        if (uploadFile.isEmpty()) {
-       	 sb.append("none");
-        } else {
-       	 sb.append(date.getTime());
-       	 sb.append(uploadFile.getOriginalFilename());
-        }
-
-        if (!uploadFile.isEmpty()) {
-//        	◆◆로컬
-//    	    File dest = new File("C://images/" + sb.toString());
+        BoardEntity bEnt;
+		bEnt = mapper.readValue(param, BoardEntity.class);
+		
+        try {
+        	uploadFile.isEmpty();
+        	sb.append(date.getTime());
+        	sb.append(uploadFile.getOriginalFilename());
         	
+//        	◆◆ 로컬
+//    	    File dest = new File("C://Users//gnsdl//Desktop//test//public/" + sb.toString());
+//        	bEnt.setImage_path(sb.toString());
+
 //        	◆◆운영서버
         	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
+        	bEnt.setImage_path("/upload/" + sb.toString());        	
         	
-        	// error throw 함
-    	    uploadFile.transferTo(dest); 
-    	    
-    	    
+        	uploadFile.transferTo(dest);
+
+        } catch (Exception e) {
+        	System.out.println(e);
         }
-        bEnt.setImage_path("/upload/" + sb.toString());
+        // 0807 임시 주석 시작
+        // file image 가 없을 경우
+//        if (uploadFile.isEmpty()) {
+//       	 sb.append("none");
+//        } else {
+//       	 sb.append(date.getTime());
+//       	 sb.append(uploadFile.getOriginalFilename());
+//        }
+
+//        if (!uploadFile.isEmpty()) {
+//        	◆◆로컬
+//    	    File dest = new File("C://images/" + sb.toString());
+//        	
+//        	◆◆운영서버
+//        	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
+//        	
+//        	// error throw 함
+//    	    try {
+//				uploadFile.transferTo(dest);
+//			} catch (IllegalStateException | IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} 
+//    	    
+//    	    
+//        }
+//        bEnt.setImage_path("/upload/" + sb.toString());
+        // 0807 임시 주석 끝
+        
         // db에 파일 위치랑 번호 등록
         int result = bDao.addBoard(bEnt);
 		return 0;

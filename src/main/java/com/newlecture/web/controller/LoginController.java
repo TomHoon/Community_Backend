@@ -1,14 +1,23 @@
 package com.newlecture.web.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newlecture.web.dao.MemberDao;
+import com.newlecture.web.entity.FileEntity;
 import com.newlecture.web.entity.MemberEntity;
 
 @RestController
@@ -16,6 +25,7 @@ public class LoginController {
 	
 	@Autowired
 	MemberDao mDao;
+	
 	
 	@GetMapping("/getMemberAll")
 	public List<MemberEntity> getMemberAll() {
@@ -40,8 +50,43 @@ public class LoginController {
 	
 	// 회원가입
 	@PostMapping("/joinMember")
-	public int insertMember(@RequestBody MemberEntity mEnt) {
-		System.out.println("come here");
+	public int insertMember(@RequestPart MultipartFile mFile, @RequestPart String param) throws IllegalStateException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+        MemberEntity mEnt = mapper.readValue(param, MemberEntity.class);
+        
+        if (!mFile.isEmpty()) {
+        	// 시간과 originalFilename으로 매핑 시켜서 src 주소를 만들어 낸다.
+            Date date = new Date();
+            StringBuilder sb = new StringBuilder();
+            
+           	 sb.append(date.getTime());
+           	 sb.append(mFile.getOriginalFilename());
+
+            if (!mFile.isEmpty()) {
+//            	◆◆로컬
+//        	    File dest = new File("C://images/" + sb.toString());
+            	
+//            	◆◆운영서버
+            	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
+            	
+            	// error throw 함
+        	    mFile.transferTo(dest); 
+        	    
+        	    
+            }
+            FileEntity fEnt = new FileEntity();
+            fEnt.setFile_name(sb.toString());
+            // local
+//            fEnt.setFile_path("C://images/" + sb.toString());
+            
+            // prod
+            fEnt.setFile_path("/uplaod/" + sb.toString());
+            
+    		mDao.insertFile(fEnt);
+        	
+        	mEnt.setFile_idx(getFileData(fEnt).getFile_idx()); 
+        }
+        
 		int result;
 		try {
 			result = mDao.joinMember(mEnt);
@@ -50,5 +95,41 @@ public class LoginController {
 			System.out.println("e : " + e);
 		}
 		return result;
+	}
+	
+	public FileEntity insertFile(@RequestPart MultipartFile uploadFile) throws IllegalStateException, IOException {
+        // 시간과 originalFilename으로 매핑 시켜서 src 주소를 만들어 낸다.
+        Date date = new Date();
+        StringBuilder sb = new StringBuilder();
+        
+       	 sb.append(date.getTime());
+       	 sb.append(uploadFile.getOriginalFilename());
+
+        if (!uploadFile.isEmpty()) {
+//        	◆◆로컬
+//    	    File dest = new File("C://images/" + sb.toString());
+        	
+//        	◆◆운영서버
+        	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
+        	
+        	// error throw 함
+    	    uploadFile.transferTo(dest); 
+    	    
+    	    
+        }
+        FileEntity fEnt = new FileEntity();
+        fEnt.setFile_name(sb.toString());
+//        local
+//        fEnt.setFile_path("C://images/" + sb.toString());
+        
+//        prod
+        fEnt.setFile_path("/upload/" + sb.toString());
+        
+		mDao.insertFile(fEnt);
+		return getFileData(fEnt);
+	}
+	
+	public FileEntity getFileData(FileEntity fEnt) {
+		return mDao.getFileData(fEnt);
 	}
 }

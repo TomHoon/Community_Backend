@@ -11,7 +11,21 @@ public class BoardEntity {
 	String hit;
 	String order;
 	String image_path;
+	String reg_date;
+	String amnd_data;
 	
+	public String getReg_date() {
+		return reg_date;
+	}
+	public void setReg_date(String reg_date) {
+		this.reg_date = reg_date;
+	}
+	public String getAmnd_data() {
+		return amnd_data;
+	}
+	public void setAmnd_data(String amnd_data) {
+		this.amnd_data = amnd_data;
+	}
 	public String getId() {
 		return id;
 	}

@@ -12,7 +12,14 @@ public class MemberEntity {
 	String member_amnd_date;
 	String member_address;
 	String member_del_yn;
+	String file_idx;
 	
+	public String getFile_idx() {
+		return file_idx;
+	}
+	public void setFile_idx(String file_idx) {
+		this.file_idx = file_idx;
+	}
 	public String getMember_idx() {
 		return member_idx;
 	}
