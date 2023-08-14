@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newlecture.web.dao.CommentDao;
+import com.newlecture.web.entity.BoardEntity;
 import com.newlecture.web.entity.CommentEntity;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +31,11 @@ public class CommentController {
 	@Autowired
 	CommentDao cDao;
 	
-	@PostMapping("/getCommentById")
-	public CommentEntity getCommentById(@RequestBody CommentEntity cEntity) {
-		CommentEntity cEnt = cDao.getCommentById(cEntity);
-		return cEnt;
+	@PostMapping("/getCommentAll")
+	public List<CommentEntity> getCommentAll(@RequestBody CommentEntity cEntity) {
+		List<CommentEntity> list = cDao.getCommentAll(cEntity);
+		return list;
 	}
+
 }
 
