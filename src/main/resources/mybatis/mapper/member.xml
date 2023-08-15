@@ -68,4 +68,8 @@
 			file_path = #{file_path}
 		limit 1
 	</select> 
+	<select id="getOneMember" parameterType="com.newlecture.web.entity.MemberEntity" resultType="com.newlecture.web.entity.MemberEntity">
+		SELECT * FROM member_tb
+		WHERE member_id = #{member_id}
+	</select> 
 </mapper>

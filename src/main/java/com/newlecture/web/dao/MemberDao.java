@@ -14,4 +14,5 @@ public interface MemberDao {
 	public int loginMember(MemberEntity mEnt);
 	public int insertFile(FileEntity fEnt);
 	public FileEntity getFileData(FileEntity fEnt);
+	public MemberEntity getOneMember(MemberEntity mEnt); 
 }

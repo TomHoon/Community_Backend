@@ -9,12 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newlecture.web.dao.MemberDao;
 import com.newlecture.web.entity.FileEntity;
@@ -66,6 +65,8 @@ public class LoginController {
 //            	◆◆로컬
 //        	    File dest = new File("C://images/" + sb.toString());
             	
+            	//피시방 임시, c파일에다 넣으면 접근이 안돼서 정적폴더에 잠시 넣은경우임
+//        	    File dest = new File("C://Users//Administrator//Downloads//CommunityProject//public/" + sb.toString());
 //            	◆◆운영서버
             	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
             	
@@ -80,7 +81,7 @@ public class LoginController {
 //            fEnt.setFile_path("C://images/" + sb.toString());
             
             // prod
-            fEnt.setFile_path("/uplaod/" + sb.toString());
+            fEnt.setFile_path("/upload/" + sb.toString());
             
     		mDao.insertFile(fEnt);
         	
@@ -131,5 +132,10 @@ public class LoginController {
 	
 	public FileEntity getFileData(FileEntity fEnt) {
 		return mDao.getFileData(fEnt);
+	}
+	
+	@PostMapping("/getOneMember")
+	public MemberEntity getOneMember(@RequestBody MemberEntity mEnt) {
+		return mDao.getOneMember(mEnt);
 	}
 }

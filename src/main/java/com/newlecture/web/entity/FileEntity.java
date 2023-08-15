@@ -7,6 +7,7 @@ public class FileEntity {
 	String file_idx;
 	String file_name;
 	String file_path;
+	
 	public String getFile_idx() {
 		return file_idx;
 	}

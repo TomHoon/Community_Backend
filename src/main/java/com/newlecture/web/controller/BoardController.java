@@ -107,6 +107,9 @@ public class BoardController {
 //    	    File dest = new File("C://images/" + sb.toString());
 //        	File dest = new File("C://Users//gnsdl//Desktop//test//public/" + sb.toString());
         	
+        	// 피시방
+//        	File dest = new File("C://Users//Administrator//Downloads//CommunityProject//public/" + sb.toString());
+        	
 //        	◆◆운영서버
 //        	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
         	File dest = new File("/gnsdl2846/tomcat/webapps/ROOT/WEB-INF/classes/static/" + sb.toString());
@@ -117,6 +120,7 @@ public class BoardController {
         }
 //        BoardEntity bEnt = new BoardEntity();
 //        bEnt.setImage_path("/upload/" + sb.toString());
+        
         return sb.toString(); // 로컬테스트
 //		return "/upload/" + sb.toString();
 	}
@@ -139,7 +143,10 @@ public class BoardController {
         	
 //        	◆◆ 로컬
 //    	    File dest = new File("C://Users//gnsdl//Desktop//test//public/" + sb.toString());
-//        	bEnt.setImage_path(sb.toString());
+        	
+        	// 피시방 임시
+//        	File dest = new File("C://Users//Administrator//Downloads//CommunityProject//public/" + sb.toString());
+        	bEnt.setImage_path(sb.toString());
 
 //        	◆◆운영서버
         	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
