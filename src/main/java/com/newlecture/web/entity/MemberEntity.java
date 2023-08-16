@@ -10,7 +10,9 @@ public class MemberEntity {
 	String member_email;
 	String member_reg_date;
 	String member_amnd_date;
+	String postcode;
 	String member_address;
+	String detailAddress;
 	String member_del_yn;
 	String file_idx;
 	
@@ -74,11 +76,23 @@ public class MemberEntity {
 	public void setMember_amnd_date(String member_amnd_date) {
 		this.member_amnd_date = member_amnd_date;
 	}
+	public String getPostcode() {
+		return postcode;
+	}
+	public void setPostcode(String postcode) {
+		this.postcode = postcode;
+	}
 	public String getMember_address() {
 		return member_address;
 	}
 	public void setMember_address(String member_address) {
 		this.member_address = member_address;
+	}
+	public String getDetailAddress() {
+		return detailAddress;
+	}
+	public void setDetailAddress(String detailAddress) {
+		this.detailAddress = detailAddress;
 	}
 	public String getMember_del_yn() {
 		return member_del_yn;
@@ -86,6 +100,5 @@ public class MemberEntity {
 	public void setMember_del_yn(String member_del_yn) {
 		this.member_del_yn = member_del_yn;
 	}
-	
-	
+
 }

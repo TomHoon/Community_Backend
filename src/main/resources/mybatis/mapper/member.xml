@@ -25,7 +25,9 @@
 			member_email,
 			member_reg_date,
 			member_amnd_date,
+			postcode,
 			member_address,
+			detailAddress,
 			member_del_yn,
 			file_idx
 			)
@@ -40,7 +42,9 @@
 			#{member_email},
 			now(),
 			now(),
+			#{postcode},
 			#{member_address},
+			#{detailAddress},
 			#{member_del_yn},
 			#{file_idx}
 			);
