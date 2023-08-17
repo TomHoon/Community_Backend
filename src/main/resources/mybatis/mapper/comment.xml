@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.newlecture.web.dao.CommentDao">
+	<select id="getAllComment" parameterType="com.newlecture.web.entity.CommentEntity">
+		select * from comment_tb
+	</select>
+	
+	<select id="getCommentByBoard" parameterType="com.newlecture.web.entity.CommentEntity">
+		select * from comment_tb
+		where id = #{id}
+	</select>
+	
+	<insert id="addComment" parameterType="com.newlecture.web.entity.CommentEntity">
+		insert into comment_tb(
+			member_id,
+			id,
+			comment_content
+		) values (
+			#{member_id},
+			#{id},
+			#{comment_content}
+		)
+	</insert>
+	
+	<update id="recommendUpDown" parameterType="com.newlecture.web.entity.CommentEntity">
+		update comment_tb set
+	
+		<if test='!comment_recommend.equals("")'>
+		   comment_recommend = comment_recommend + 1
+		</if> 
+		
+		<if test='!comment_unrecommend.equals("")'>
+		   comment_unrecommend = comment_unrecommend + 1
+		</if> 
+		
+		where comment_idx = #{comment_idx}
+	</update>
+</mapper>
