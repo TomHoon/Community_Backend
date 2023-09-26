@@ -13,6 +13,7 @@ public class BoardEntity {
 	String image_path;
 	String reg_date;
 	String amnd_data;
+	String comment_count;
 	
 	public String getReg_date() {
 		return reg_date;
@@ -86,4 +87,12 @@ public class BoardEntity {
 	public void setImage_path(String image_path) {
 		this.image_path = image_path;
 	}
+	public String getComment_count() {
+		return comment_count;
+	}
+	public void setComment_count(String comment_count) {
+		this.comment_count = comment_count;
+	}
+	
+	
 }
