@@ -12,4 +12,5 @@ public interface CommentDao {
 	public List<CommentEntity> getCommentByBoard(CommentEntity cEnt);
 	public int addComment(CommentEntity cEnt);
 	public int recommendUpDown(CommentEntity cEnt);
+	public int deleteComment(CommentEntity cEnt);
 }

@@ -37,4 +37,10 @@
 		
 		where comment_idx = #{comment_idx}
 	</update>
+	
+	<delete id="deleteComment" parameterType="com.newlecture.web.entity.CommentEntity">
+		delete from comment_tb
+		where 
+			comment_idx = #{comment_idx}
+	</delete>
 </mapper>
