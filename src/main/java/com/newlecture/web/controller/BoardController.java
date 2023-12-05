@@ -112,8 +112,10 @@ public class BoardController {
         	
 //        	◆◆운영서버
 //        	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
-        	File dest = new File("/gnsdl2846/tomcat/webapps/ROOT/WEB-INF/classes/static/" + sb.toString());
+//        	File dest = new File("/gnsdl2846/tomcat/webapps/ROOT/WEB-INF/classes/static/" + sb.toString());
         	
+//        	◆◆Nas서버(/usr/local/tomcat/work/Catalina/localhost/ROOT)
+        	File dest = new File("../upload/" + sb.toString());
         	
         	// error throw 함
         	mFile.transferTo(dest); 
@@ -149,8 +151,25 @@ public class BoardController {
         	bEnt.setImage_path(sb.toString());
 
 //        	◆◆운영서버
-        	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
-        	bEnt.setImage_path("/upload/" + sb.toString());        	
+//        	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
+//        	bEnt.setImage_path("/upload/" + sb.toString());
+        	
+        	
+//        	폴더 없으면 생성
+        	String path = "/upload";
+        	File folder = new File(path);
+        	
+        	if(!folder.exists()) {
+        		folder.mkdir();
+        		System.out.println("폴더 생성 완료");
+        	}
+        	
+//        	◆◆Nas서버(/usr/local/tomcat/webapps/upload)
+//        	상대경로로 하면 완전 다른 경로로 잡힘 
+        	File dest = new File("/usr/local/tomcat/webapps/upload/" + sb.toString());
+        	System.out.println("des 경로 >> "+ "/upload/" + sb.toString());
+        	
+        	bEnt.setImage_path("/upload/" + sb.toString());
         	
         	uploadFile.transferTo(dest);
 
