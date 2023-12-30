@@ -135,28 +135,28 @@ public class BoardController {
         ObjectMapper mapper = new ObjectMapper();
         BoardEntity bEnt;
 		bEnt = mapper.readValue(param, BoardEntity.class);
-		
-        try {
-        	uploadFile.isEmpty();
-        	sb.append(date.getTime());
-        	sb.append(uploadFile.getOriginalFilename());
-        	
-//        	◆◆ 로컬
-//    	    File dest = new File("C://Users//gnsdl//Desktop//test//public/" + sb.toString());
-        	
-        	// 피시방 임시
-//        	File dest = new File("C://Users//Administrator//Downloads//CommunityProject//public/" + sb.toString());
-        	bEnt.setImage_path(sb.toString());
-
-//        	◆◆운영서버
-        	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
-        	bEnt.setImage_path("/upload/" + sb.toString());        	
-        	
-        	uploadFile.transferTo(dest);
-
-        } catch (Exception e) {
-        	System.out.println(e);
-        }
+		if (uploadFile != null) {
+	        try {
+	        	uploadFile.isEmpty();
+	        	sb.append(date.getTime());
+	        	sb.append(uploadFile.getOriginalFilename());
+	        	
+	//        	◆◆ 로컬
+	//    	    File dest = new File("C://Users//gnsdl//Desktop//test//public/" + sb.toString());
+	        	
+	        	// 피시방 임시
+	//        	File dest = new File("C://Users//Administrator//Downloads//CommunityProject//public/" + sb.toString());
+	        	bEnt.setImage_path(sb.toString());
+	
+	//        	◆◆운영서버
+	        	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
+	        	bEnt.setImage_path("/upload/" + sb.toString());        	
+	        	
+	        	uploadFile.transferTo(dest);
+	
+	        } catch (Exception e) {
+	        	System.out.println(e);
+	        }
         // 0807 임시 주석 시작
         // file image 가 없을 경우
 //        if (uploadFile.isEmpty()) {
@@ -185,10 +185,13 @@ public class BoardController {
 //        }
 //        bEnt.setImage_path("/upload/" + sb.toString());
         // 0807 임시 주석 끝
-        
-        // db에 파일 위치랑 번호 등록
-        int result = bDao.addBoard(bEnt);
-		return 0;
+	    return 0;
+		} else {
+			bEnt.setImage_path("/");
+			// db에 파일 위치랑 번호 등록
+			int result = bDao.addBoard(bEnt);
+			return 0;
+		}
     }
 	
 	@GetMapping(value = "/display")
