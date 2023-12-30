@@ -36,4 +36,9 @@ public class CommentController {
 	public int recommendUpDown(@RequestBody CommentEntity cEnt) {
 		return cDao.recommendUpDown(cEnt);
 	}
+	
+	@PostMapping("/deleteComment")
+	public int deleteComment(@RequestBody CommentEntity cEnt) {
+		return cDao.deleteComment(cEnt);
+	}
 }
