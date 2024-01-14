@@ -27,12 +27,12 @@
 	<update id="recommendUpDown" parameterType="com.newlecture.web.entity.CommentEntity">
 		update comment_tb set
 	
-		<if test='!comment_recommend.equals("")'>
-		   comment_recommend = comment_recommend + 1
+		<if test='comment_recommend != null'>
+		   comment_recommend = comment_recommend + #{comment_recommend}
 		</if> 
 		
-		<if test='!comment_unrecommend.equals("")'>
-		   comment_unrecommend = comment_unrecommend + 1
+		<if test='comment_unrecommend != null '>
+		   comment_unrecommend = comment_unrecommend + #{comment_unrecommend}
 		</if> 
 		
 		where comment_idx = #{comment_idx}
@@ -43,4 +43,34 @@
 		where 
 			comment_idx = #{comment_idx}
 	</delete>
+	
+	<select id="addCommentMemberId" parameterType="com.newlecture.web.entity.CommentEntity">
+		select comment_idx from comment_tb
+		where member_id = #{member_id}
+	</select>
+	
+	<select id="findOneComment" parameterType="com.newlecture.web.entity.CommentEntity">
+		select * from comment_tb
+		where comment_idx = #{comment_idx}
+	</select>
+	
+	<update id="changeUpList" parameterType="com.newlecture.web.entity.CommentEntity">
+		update comment_tb set
+		
+		<if test='comment_up_id_list != null '>
+			comment_up_id_list = #{comment_up_id_list}
+		</if>
+		
+		<if test='comment_down_id_list != null '>
+			comment_down_id_list = #{comment_down_id_list}
+		</if>
+		where comment_idx = #{comment_idx}
+	</update>
+	
+	<update id="changeDownList" parameterType="com.newlecture.web.entity.CommentEntity">
+		update comment_tb set
+		comment_down_id_list = #{comment_down_id_list}
+		where comment_idx = #{comment_idx}
+	</update>
+	
 </mapper>

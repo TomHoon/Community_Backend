@@ -2,7 +2,6 @@ package com.newlecture.web.entity;
 
 import lombok.Data;
 
-@Data
 public class CommentEntity {
 	String comment_idx;
 	String member_id;
@@ -18,6 +17,10 @@ public class CommentEntity {
 	String comment_report;
 	String comment_recommend;
 	String comment_unrecommend;
+	String comment_up_id_list;
+	String comment_down_id_list;
+	String comment_ud_temp_id;
+	
 	public String getComment_idx() {
 		return comment_idx;
 	}
@@ -101,6 +104,24 @@ public class CommentEntity {
 	}
 	public void setComment_unrecommend(String comment_unrecommend) {
 		this.comment_unrecommend = comment_unrecommend;
+	}
+	public String getComment_ud_temp_id() {
+		return comment_ud_temp_id;
+	}
+	public void setComment_ud_temp_id(String comment_ud_temp_id) {
+		this.comment_ud_temp_id = comment_ud_temp_id;
+	}
+	public String getComment_up_id_list() {
+		return comment_up_id_list;
+	}
+	public void setComment_up_id_list(String comment_up_id_list) {
+		this.comment_up_id_list = comment_up_id_list;
+	}
+	public String getComment_down_id_list() {
+		return comment_down_id_list;
+	}
+	public void setComment_down_id_list(String comment_down_id_list) {
+		this.comment_down_id_list = comment_down_id_list;
 	}
 	
 	

@@ -12,6 +12,11 @@
 		where member_id = #{member_id}
 		and member_pw = #{member_pw}
 	</select>
+	<select id="findMember" parameterType="com.newlecture.web.entity.MemberEntity">
+		select * from member_tb
+		where member_id = #{member_id}
+		and member_pw = #{member_pw}
+	</select>
 	
 	<insert id="joinMember" parameterType="com.newlecture.web.entity.MemberEntity">
 		INSERT INTO member_tb
@@ -71,5 +76,37 @@
 	<select id="getOneMember" parameterType="com.newlecture.web.entity.MemberEntity" resultType="com.newlecture.web.entity.MemberEntity">
 		SELECT * FROM member_tb
 		WHERE member_id = #{member_id}
-	</select> 
+	</select>
+	 
+	<delete id="joinOut" parameterType="com.newlecture.web.entity.MemberEntity">
+		delete FROM member_tb
+		WHERE member_id = #{member_id}
+		AND member_pw = #{member_pw}
+	</delete> 
+	
+	<update id="memberUpdate" parameterType="com.newlecture.web.entity.MemberEntity">
+		update member_tb
+		set
+		<if test='!member_pw.equals("")'>
+		   member_pw = #{member_pw},
+		</if> 
+		<if test='!member_nickname.equals("")'>
+		   member_nickname = #{member_nickname},
+		</if>
+		<if test='!member_phone.equals("")'>
+		   member_phone = #{member_phone},
+		</if>
+		<if test='!member_email.equals("")'>
+		   member_email = #{member_email},
+		</if>
+		<if test='!member_address.equals("")'>
+		   member_address = #{member_address}
+		</if>
+		where member_id = #{member_id}
+	</update>
+	
+	<update id="updateCommentIdx" parameterType="com.newlecture.web.entity.MemberEntity">
+		update member_tb 
+		
+	</update>
 </mapper>

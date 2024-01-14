@@ -8,16 +8,21 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.newlecture.web.dao.MemberDao;
 import com.newlecture.web.dao.TestDao;
+import com.newlecture.web.entity.MemberEntity;
 import com.newlecture.web.entity.TestEntity;
 import com.newlecture.web.service.SecurityService;
 
 @RestController
 public class TestController {
-    
+	@Autowired
+	MemberDao mDao;
+	
 	@Autowired
     private SecurityService securityService;
     
@@ -55,5 +60,22 @@ public class TestController {
         map.put("userid", subject);
         map.put("token", token);
         return map;
+    }
+    
+    @PostMapping("test/auth")
+    public String testAuth(@RequestHeader Map<String, String> headers) {
+    	String id = headers.get("member_id");
+    	String deTokenPw = getSubject(headers.get("token"));
+    	
+    	MemberEntity mEnt = new MemberEntity();
+    	mEnt.setMember_id(id);
+    	mEnt.setMember_pw(deTokenPw);
+    	
+    	MemberEntity mEnt2 = mDao.findMember(mEnt);
+    	if (mEnt2.getMember_id().isEmpty()) {
+    		return "일치하지 않음";
+    	} else {
+    		return "일치함";
+    	}
     }
 }
