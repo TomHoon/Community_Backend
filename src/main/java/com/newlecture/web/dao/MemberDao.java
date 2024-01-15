@@ -12,7 +12,10 @@ public interface MemberDao {
 	public List<MemberEntity> getMemberAll();
 	public int joinMember(MemberEntity mEnt);
 	public int loginMember(MemberEntity mEnt);
+	public MemberEntity findMember(MemberEntity mEnt);
 	public int insertFile(FileEntity fEnt);
 	public FileEntity getFileData(FileEntity fEnt);
-	public MemberEntity getOneMember(MemberEntity mEnt); 
+	public MemberEntity getOneMember(MemberEntity mEnt);
+	public int joinOut(MemberEntity mEnt);
+	public int memberUpdate(MemberEntity mEnt);
 }

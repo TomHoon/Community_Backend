@@ -92,6 +92,7 @@ public class BoardController {
 		// 시간과 originalFilename으로 매핑 시켜서 src 주소를 만들어 낸다.
         Date date = new Date();
         StringBuilder sb = new StringBuilder();
+        BoardEntity bEnt = new BoardEntity();
         
      // file image 가 없을 경우
         if (mFile.isEmpty()) {
@@ -104,9 +105,10 @@ public class BoardController {
 
         if (!mFile.isEmpty()) {
 //        	◆◆로컬
-//    	    File dest = new File("C://images/" + sb.toString());
-//        	File dest = new File("C://Users//gnsdl//Desktop//test//public/" + sb.toString());
-        	
+//        	File file = new File(".");
+//        	File dest = new File(file.getAbsolutePath()+ "src/main/webapp/" + sb.toString());     
+//        	File dest = new File("C:/Users/gnsdl/Documents/workspace-spring-tool-suite-4-4.16.0.RELEASE/CommunityProject-1/src/main/webapp/" + sb.toString());
+
         	// 피시방
 //        	File dest = new File("C://Users//Administrator//Downloads//CommunityProject//public/" + sb.toString());
         	
@@ -115,16 +117,16 @@ public class BoardController {
 //        	File dest = new File("/gnsdl2846/tomcat/webapps/ROOT/WEB-INF/classes/static/" + sb.toString());
         	
 //        	◆◆Nas서버(/usr/local/tomcat/work/Catalina/localhost/ROOT)
-        	File dest = new File("../upload/" + sb.toString());
-        	
+//        	File dest = new File("../upload/" + sb.toString());
+        	File dest = new File("/usr/local/tomcat/webapps/upload/" + sb.toString());
+
         	// error throw 함
         	mFile.transferTo(dest); 
         }
-//        BoardEntity bEnt = new BoardEntity();
-//        bEnt.setImage_path("/upload/" + sb.toString());
         
-        return sb.toString(); // 로컬테스트
-//		return "/upload/" + sb.toString();
+//        bEnt.setImage_path("/upload/" + sb.toString());
+//        return sb.toString(); // 로컬테스트
+		return "/upload/" + sb.toString(); // nas
 	}
 	
 //	@PostMapping("/pushImage")
@@ -143,19 +145,9 @@ public class BoardController {
         	sb.append(date.getTime());
         	sb.append(uploadFile.getOriginalFilename());
         	
-//        	◆◆ 로컬
-//    	    File dest = new File("C://Users//gnsdl//Desktop//test//public/" + sb.toString());
-        	
-        	// 피시방 임시
-//        	File dest = new File("C://Users//Administrator//Downloads//CommunityProject//public/" + sb.toString());
-        	bEnt.setImage_path(sb.toString());
-
-//        	◆◆운영서버
-//        	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
-//        	bEnt.setImage_path("/upload/" + sb.toString());
-        	
-        	
-//        	폴더 없으면 생성
+        	  
+        	 
+ /*        	폴더 없으면 생성
         	String path = "/upload";
         	File folder = new File(path);
         	
@@ -163,13 +155,39 @@ public class BoardController {
         		folder.mkdir();
         		System.out.println("폴더 생성 완료");
         	}
+*/
+        	
+//        	◆◆ 로컬
+        	//C:\Users\gnsdl\Documents\workspace-spring-tool-suite-4-4.16.0.RELEASE\CommunityProject-1\
+        	/**
+        	 * 상대경로는
+        	 * 프로젝트 폴더 최초 진입점임
+        	 * src보이는 위치
+        	 * 
+        	 * 주의) File은 절대경로로 처리해야함
+        	 */
+//    	    File dest = new File("C:/Users/gnsdl/Documents/CommunityProject/public/" + sb.toString()); //됨
+//        	File file = new File(".");
+//        	File dest = new File(file.getAbsolutePath()+ "src/main/webapp/" + sb.toString());
+//        	File dest = new File("C:/Users/gnsdl/Documents/workspace-spring-tool-suite-4-4.16.0.RELEASE/CommunityProject-1/src/main/webapp/" + sb.toString());
+        	
+//        	bEnt.setImage_path(sb.toString());
+//        	System.out.println(dest.getAbsolutePath());
+        	
+        	// 피시방 임시
+//        	File dest = new File("C://Users//Administrator//Downloads//CommunityProject//public/" + sb.toString());
+//        	bEnt.setImage_path(sb.toString());
+
+//        	◆◆운영서버
+//        	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
+//        	bEnt.setImage_path("/upload/" + sb.toString());
         	
 //        	◆◆Nas서버(/usr/local/tomcat/webapps/upload)
 //        	상대경로로 하면 완전 다른 경로로 잡힘 
         	File dest = new File("/usr/local/tomcat/webapps/upload/" + sb.toString());
+        	bEnt.setImage_path("/upload/" + sb.toString());
         	System.out.println("des 경로 >> "+ "/upload/" + sb.toString());
         	
-        	bEnt.setImage_path("/upload/" + sb.toString());
         	
         	uploadFile.transferTo(dest);
 
