@@ -44,12 +44,28 @@ public class CommentController {
 		// TODO: 내가 쓴 글 upDown 못하게 막기
 		String comment_idx = cEnt.getComment_idx();
 		
+		// 비추천누른 경우
 		if (cEnt.getComment_recommend() == null) {
-			// 비추천누른 경우
+			// 이미 비추천을 눌렀다.
+			
 			
 			// 기존에 updown한 리스트에 아이디를 삭제하기
 			String downId = cEnt.getComment_ud_temp_id();
 			CommentEntity findComment = findOneComment(cEnt);
+			
+			String up_list = findComment.getComment_up_id_list();
+			
+			// 좋아요를 클릭해놓은 상태라면 지운다.
+			if (up_list != null && up_list.contains(downId)) {
+				CommentEntity tempCent = new CommentEntity();
+				tempCent.setComment_idx(comment_idx);
+				tempCent.setComment_recommend("-1");
+				cDao.recommendUpDown(tempCent);
+				up_list = up_list.replace((","+downId), "");
+				findComment.setComment_up_id_list(up_list);
+				findComment.setComment_down_id_list(null);
+				changeUpList(findComment);
+			}
 			
 			String list = findComment.getComment_down_id_list();
 			
@@ -79,12 +95,28 @@ public class CommentController {
 			String upId = cEnt.getComment_ud_temp_id();
 			CommentEntity findComment = findOneComment(cEnt);
 			
+			String down_list = findComment.getComment_down_id_list();
+			
+			// 좋아요를 눌렀으나 안좋아요를 누른게 있다면 지운다.
+			if (down_list != null && down_list.contains(upId)) {
+				CommentEntity resetDownEnt = new CommentEntity();
+				resetDownEnt.setComment_idx(comment_idx);
+				resetDownEnt.setComment_unrecommend("-1");
+				cDao.recommendUpDown(resetDownEnt);
+				down_list = down_list.replace("," + upId, "");
+				findComment.setComment_down_id_list(down_list);
+				findComment.setComment_up_id_list(null);
+				changeUpList(findComment);
+			}
+			
 			String list = findComment.getComment_up_id_list();
+			
 			if (list != null && list.contains(upId)) {
 				cEnt.setComment_recommend("-1");
 				cDao.recommendUpDown(cEnt);
 				list = list.replace((","+upId), "");
 				findComment.setComment_up_id_list(list);
+				findComment.setComment_down_id_list(null);
 				changeUpList(findComment);
 				return 2;
 			}
@@ -92,6 +124,7 @@ public class CommentController {
 			list = list + "," + upId;
 			
 			findComment.setComment_up_id_list(list);
+			findComment.setComment_down_id_list(null);
 			
 			changeUpList(findComment);
 			
