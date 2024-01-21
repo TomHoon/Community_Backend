@@ -2,6 +2,7 @@
 package com.newlecture.web.controller;
 
 import java.io.File;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,6 +12,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -30,220 +32,141 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newlecture.web.dao.BoardDao;
 import com.newlecture.web.entity.BoardEntity;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 public class BoardController {
+
+	@Value("${temp-img-url}")
+	private String tempImgUrl;
 	
+	@Value("${addBoard-img-url}")
+	private String addBoardImgUrl;
+	
+	@Value("${addBoard-setImgPath-img-url}")
+	private String addBoardSetImgPathImgUrl;
+
 	@Autowired
 	BoardDao bDao;
-	
+
 	@PostMapping("/getBoardAll")
 	public List<BoardEntity> getBoardAll(@RequestBody BoardEntity bEntity) {
+		log.info("addBoard >>> ");
 		if (bEntity.getOrder().isEmpty()) {
 			bEntity.setOrder("0");
 		}
-		
+
 		List<BoardEntity> list = bDao.getBoardAll(bEntity);
 		return list;
 	}
-	
-//	@PostMapping("/addBoard")
-//	public int addBoard(@RequestBody BoardEntity bEntity) {
-//		int result = bDao.addBoard(bEntity);
-//		return result;
-//	}
-	
+
 	@PostMapping("/searchBoard")
 	public List<BoardEntity> searchBoard(@RequestBody BoardEntity bEntity) {
 		List<BoardEntity> list = bDao.searchBoard(bEntity);
 		return list;
 	}
-	
+
 	@PostMapping("/getBoardById")
 	public BoardEntity getBoardById(@RequestBody BoardEntity bEntity) {
 		BoardEntity bEnt = bDao.getBoardById(bEntity);
 		return bEnt;
 	}
-	
+
 	@PostMapping("/updateBoard")
 	public int updateBoard(@RequestBody BoardEntity bEntity) {
 		int result = bDao.updateBoard(bEntity);
 		return result;
 	}
-	
+
 	@PostMapping("/updateHitBoard")
 	public int updateHitBoard(@RequestBody BoardEntity bEntity) {
 		int result = bDao.updateHitBoard(bEntity);
 		return result;
 	}
-	
+
 	@PostMapping("/deleteBoard")
 	public int deleteBoard(@RequestBody BoardEntity bEntity) {
 		int result = bDao.deleteBoard(bEntity);
 		return result;
 	}
-	
+
 	@PostMapping("/updateRecommendBoard")
 	public int updateRecommendBoard(@RequestBody BoardEntity bEntity) {
 		int result = bDao.updateRecommendHitBoard(bEntity);
 		return result;
 	}
+
 	@PostMapping("/tempImg")
 	public String tempImg(@RequestParam MultipartFile mFile) throws IllegalStateException, IOException {
 		// 시간과 originalFilename으로 매핑 시켜서 src 주소를 만들어 낸다.
-        Date date = new Date();
-        StringBuilder sb = new StringBuilder();
-        BoardEntity bEnt = new BoardEntity();
-        
-     // file image 가 없을 경우
-        if (mFile.isEmpty()) {
-       	 sb.append("none");
-       	 return "none";
-        } else {
-       	 sb.append(date.getTime());
-       	 sb.append(mFile.getOriginalFilename());
-        }
+		Date date = new Date();
+		StringBuilder sb = new StringBuilder();
+		BoardEntity bEnt = new BoardEntity();
 
-        if (!mFile.isEmpty()) {
-//        	◆◆로컬
-//        	File file = new File(".");
-//        	File dest = new File(file.getAbsolutePath()+ "src/main/webapp/" + sb.toString());     
-//        	File dest = new File("C:/Users/gnsdl/Documents/workspace-spring-tool-suite-4-4.16.0.RELEASE/CommunityProject-1/src/main/webapp/" + sb.toString());
+		// file image 가 없을 경우
+		if (mFile.isEmpty()) {
+			sb.append("none");
+			return "none";
+		} else {
+			sb.append(date.getTime());
+			sb.append(mFile.getOriginalFilename());
+		}
 
-        	// 피시방
-//        	File dest = new File("C://Users//Administrator//Downloads//CommunityProject//public/" + sb.toString());
-        	
-//        	◆◆운영서버
-//        	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
-//        	File dest = new File("/gnsdl2846/tomcat/webapps/ROOT/WEB-INF/classes/static/" + sb.toString());
-        	
-//        	◆◆Nas서버(/usr/local/tomcat/work/Catalina/localhost/ROOT)
-//        	File dest = new File("../upload/" + sb.toString());
-        	File dest = new File("/usr/local/tomcat/webapps/upload/" + sb.toString());
+		if (!mFile.isEmpty()) {
+			File dest = new File(tempImgUrl + sb.toString());
 
-        	// error throw 함
-        	mFile.transferTo(dest); 
-        }
-        
-//        bEnt.setImage_path("/upload/" + sb.toString());
-//        return sb.toString(); // 로컬테스트
+			mFile.transferTo(dest); // error는 throw해버림
+		}
+
 		return "/upload/" + sb.toString(); // nas
 	}
-	
-//	@PostMapping("/pushImage")
+
 	@PostMapping("/addBoard")
-	public int pushImage(@RequestPart(required = false)  MultipartFile uploadFile, @RequestPart String param) throws JsonMappingException, JsonProcessingException {
-        // 시간과 originalFilename으로 매핑 시켜서 src 주소를 만들어 낸다.
-        Date date = new Date();
-        StringBuilder sb = new StringBuilder();
-        
-        ObjectMapper mapper = new ObjectMapper();
-        BoardEntity bEnt;
+	public int pushImage(@RequestPart(required = false) MultipartFile uploadFile, @RequestPart String param)
+			throws JsonMappingException, JsonProcessingException {
+		// 시간과 originalFilename으로 매핑 시켜서 src 주소를 만들어 낸다.
+		Date date = new Date();
+		StringBuilder sb = new StringBuilder();
+
+		ObjectMapper mapper = new ObjectMapper();
+		BoardEntity bEnt;
 		bEnt = mapper.readValue(param, BoardEntity.class);
-		
-        try {
-        	uploadFile.isEmpty();
-        	sb.append(date.getTime());
-        	sb.append(uploadFile.getOriginalFilename());
-        	
-        	  
-        	 
- /*        	폴더 없으면 생성
-        	String path = "/upload";
-        	File folder = new File(path);
-        	
-        	if(!folder.exists()) {
-        		folder.mkdir();
-        		System.out.println("폴더 생성 완료");
-        	}
-*/
-        	
-//        	◆◆ 로컬
-        	//C:\Users\gnsdl\Documents\workspace-spring-tool-suite-4-4.16.0.RELEASE\CommunityProject-1\
-        	/**
-        	 * 상대경로는
-        	 * 프로젝트 폴더 최초 진입점임
-        	 * src보이는 위치
-        	 * 
-        	 * 주의) File은 절대경로로 처리해야함
-        	 */
-//    	    File dest = new File("C:/Users/gnsdl/Documents/CommunityProject/public/" + sb.toString()); //됨
-//        	File file = new File(".");
-//        	File dest = new File(file.getAbsolutePath()+ "src/main/webapp/" + sb.toString());
-//        	File dest = new File("C:/Users/gnsdl/Documents/workspace-spring-tool-suite-4-4.16.0.RELEASE/CommunityProject-1/src/main/webapp/" + sb.toString());
-        	
-//        	bEnt.setImage_path(sb.toString());
-//        	System.out.println(dest.getAbsolutePath());
-        	
-        	// 피시방 임시
-//        	File dest = new File("C://Users//Administrator//Downloads//CommunityProject//public/" + sb.toString());
-//        	bEnt.setImage_path(sb.toString());
 
-//        	◆◆운영서버
-//        	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
-//        	bEnt.setImage_path("/upload/" + sb.toString());
-        	
-//        	◆◆Nas서버(/usr/local/tomcat/webapps/upload)
-//        	상대경로로 하면 완전 다른 경로로 잡힘 
-        	File dest = new File("/usr/local/tomcat/webapps/upload/" + sb.toString());
-        	bEnt.setImage_path("/upload/" + sb.toString());
-        	System.out.println("des 경로 >> "+ "/upload/" + sb.toString());
-        	
-        	
-        	uploadFile.transferTo(dest);
+		try {
+			uploadFile.isEmpty();
+			sb.append(date.getTime());
+			sb.append(uploadFile.getOriginalFilename());
 
-        } catch (Exception e) {
-        	System.out.println(e);
-        }
-        // 0807 임시 주석 시작
-        // file image 가 없을 경우
-//        if (uploadFile.isEmpty()) {
-//       	 sb.append("none");
-//        } else {
-//       	 sb.append(date.getTime());
-//       	 sb.append(uploadFile.getOriginalFilename());
-//        }
+			/**
+			 * 상대경로는 프로젝트 폴더 최초 진입점임 src보이는 위치 주의) File은 절대경로로 처리해야함
+			 */
+			File dest = new File(addBoardImgUrl + sb.toString());
+			bEnt.setImage_path(addBoardSetImgPathImgUrl + sb.toString());
+			
+			uploadFile.transferTo(dest);
 
-//        if (!uploadFile.isEmpty()) {
-//        	◆◆로컬
-//    	    File dest = new File("C://images/" + sb.toString());
-//        	
-//        	◆◆운영서버
-//        	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
-//        	
-//        	// error throw 함
-//    	    try {
-//				uploadFile.transferTo(dest);
-//			} catch (IllegalStateException | IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} 
-//    	    
-//    	    
-//        }
-//        bEnt.setImage_path("/upload/" + sb.toString());
-        // 0807 임시 주석 끝
-        
-        // db에 파일 위치랑 번호 등록
-        int result = bDao.addBoard(bEnt);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		// db에 파일 위치랑 번호 등록
+		int result = bDao.addBoard(bEnt);
 		return 0;
-    }
-	
-	@GetMapping(value = "/display")
-    public ResponseEntity<Resource> display(@Param("filename") String filename) throws IOException {
-//        String path = "C://images/";
-		String path = "./upload/";
-//        String path = "/tomcat/webapps/ROOT/WEB-INF/classes/static/images/";
-//        filename = "1690988038002다운로드.jpg";
-        
-        Resource resource = new FileSystemResource(path + filename);
-        
-        HttpHeaders header = new HttpHeaders();
-        Path filePath = null;
-        
-        filePath = Paths.get(path + filename);
-        header.add("Content-Type", Files.probeContentType(filePath));
-        
-        return new ResponseEntity<Resource>(resource, header, HttpStatus.OK);
-    }
-}
+	}
 
+	@GetMapping(value = "/display")
+	public ResponseEntity<Resource> display(@Param("filename") String filename) throws IOException {
+		String path = "./upload/";
+
+		Resource resource = new FileSystemResource(path + filename);
+
+		HttpHeaders header = new HttpHeaders();
+		Path filePath = null;
+
+		filePath = Paths.get(path + filename);
+		header.add("Content-Type", Files.probeContentType(filePath));
+
+		return new ResponseEntity<Resource>(resource, header, HttpStatus.OK);
+	}
+}
