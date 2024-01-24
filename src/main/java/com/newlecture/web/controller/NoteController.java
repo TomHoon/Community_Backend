@@ -2,13 +2,13 @@
 package com.newlecture.web.controller;
 
 import com.newlecture.web.dao.NoteDao;
-import com.newlecture.web.entity.BoardEntity;
-import com.newlecture.web.entity.CommentEntity;
 import com.newlecture.web.entity.NoteEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.*;
 
 @RestController
 public class NoteController {
@@ -22,10 +22,8 @@ public class NoteController {
 	}
 
 	@PostMapping("/getNoteById")
-	public List<NoteEntity> NoteEntity(@RequestBody NoteEntity nEnt) {
-		List<NoteEntity> bEnt = nDao.getNoteById(nEnt);
-		return bEnt;
+	public List<NoteEntity> getNoteById(@RequestBody NoteEntity nEnt) {
+		return nDao.getNoteById(nEnt);
 	}
-
 
 }

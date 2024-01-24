@@ -7,7 +7,7 @@
 		select * from note_tb
 	</select>
 
-	<select id="getCommentByBoard" parameterType="com.newlecture.web.entity.NoteEntity">
+	<select id="getNoteById" parameterType="com.newlecture.web.entity.NoteEntity">
 		select * from note_tb
 		where send_id = #{send_id}
 	</select>

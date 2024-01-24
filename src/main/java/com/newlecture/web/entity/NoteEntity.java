@@ -4,6 +4,7 @@ public class NoteEntity {
 
 	String note_idx;
 	String send_id;
+	String recv_id;
 	String note_title;
 	String note_content;
 	String send_date;
@@ -26,6 +27,14 @@ public class NoteEntity {
 
 	public void setSend_id(String send_id) {
 		this.send_id = send_id;
+	}
+
+	public String getRecv_id() {
+		return recv_id;
+	}
+
+	public void setRecv_id(String recv_id) {
+		this.recv_id = recv_id;
 	}
 
 	public String getNote_title() {
