@@ -11,4 +11,13 @@
 		select * from note_tb
 		where send_id = #{send_id}
 	</select>
+
+	<select id="findOneNote" parameterType="com.newlecture.web.entity.NoteEntity">
+		select * from note_tb
+		where note_idx = #{note_idx}
+	</select>
+	<update id="updateReadDate" parameterType="com.newlecture.web.entity.NoteEntity">
+		UPDATE note_tb SET read_date = current_timestamp() where note_idx = #{note_idx};
+	</update>
+
 </mapper>
