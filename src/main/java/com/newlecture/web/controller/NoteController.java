@@ -34,5 +34,9 @@ public class NoteController {
 	public int updateReadDate(@RequestBody NoteEntity nEnt) {
 		return nDao.updateReadDate(nEnt);
 	}
+	@PostMapping("/deleteNote")
+	public int deleteNote(@RequestBody NoteEntity nEnt) {
+		return nDao.deleteNote(nEnt);
+	}
 
 }

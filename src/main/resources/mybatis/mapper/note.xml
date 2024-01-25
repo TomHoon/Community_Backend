@@ -9,7 +9,7 @@
 
 	<select id="getNoteById" parameterType="com.newlecture.web.entity.NoteEntity">
 		select * from note_tb
-		where send_id = #{send_id}
+		where send_id = #{send_id} and send_del_yn = 'N'
 	</select>
 
 	<select id="findOneNote" parameterType="com.newlecture.web.entity.NoteEntity">
@@ -19,5 +19,9 @@
 	<update id="updateReadDate" parameterType="com.newlecture.web.entity.NoteEntity">
 		UPDATE note_tb SET read_date = current_timestamp() where note_idx = #{note_idx};
 	</update>
+	<update id="deleteNote" parameterType="com.newlecture.web.entity.NoteEntity">
+		UPDATE note_tb SET send_del_yn = 'Y' where note_idx = #{note_idx};
+	</update>
+
 
 </mapper>

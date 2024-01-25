@@ -14,6 +14,7 @@ public interface NoteDao {
     public List<NoteEntity> getNoteById(NoteEntity nEnt);
     public NoteEntity findOneNote(NoteEntity nEnt);
     public int updateReadDate(NoteEntity nEnt);
+    public int deleteNote(NoteEntity nEnt);
 
 
 
