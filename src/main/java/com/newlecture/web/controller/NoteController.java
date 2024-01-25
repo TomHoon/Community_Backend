@@ -2,6 +2,7 @@
 package com.newlecture.web.controller;
 
 import com.newlecture.web.dao.NoteDao;
+import com.newlecture.web.entity.CommentEntity;
 import com.newlecture.web.entity.NoteEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,14 @@ public class NoteController {
 	@PostMapping("/getNoteById")
 	public List<NoteEntity> getNoteById(@RequestBody NoteEntity nEnt) {
 		return nDao.getNoteById(nEnt);
+	}
+	@PostMapping("/findOneNote")
+	public NoteEntity findOneNote(@RequestBody NoteEntity nEnt) {
+		return nDao.findOneNote(nEnt);
+	}
+	@PostMapping("/updateReadDate")
+	public int updateReadDate(@RequestBody NoteEntity nEnt) {
+		return nDao.updateReadDate(nEnt);
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.newlecture.web.entity;
 
+import java.util.Date;
+
 public class NoteEntity {
 
 	String note_idx;
@@ -60,6 +62,7 @@ public class NoteEntity {
 	public void setSend_date(String send_date) {
 		this.send_date = send_date;
 	}
+
 
 	public String getRead_date() {
 		return read_date;

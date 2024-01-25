@@ -11,8 +11,10 @@ import java.util.List;
 public interface NoteDao {
 
     List<NoteEntity> getAllNote();
-
     public List<NoteEntity> getNoteById(NoteEntity nEnt);
+    public NoteEntity findOneNote(NoteEntity nEnt);
+    public int updateReadDate(NoteEntity nEnt);
+
 
 
 }
