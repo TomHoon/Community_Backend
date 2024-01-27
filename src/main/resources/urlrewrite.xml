@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE urlrewrite
+    PUBLIC "-//tuckey.org//DTD UrlRewrite 3.0//EN"
+    "http://www.tuckey.org/res/dtds/urlrewrite3.0.dtd">
+<!-- 레퍼런스주소: http://tuckey.org/urlrewrite/manual/3.0/  -->
+ 
+<urlrewrite>
+<rule>
+    <name>Domain Name Check</name>
+    <condition name="host" operator="equal" next="or">localhost</condition>
+    <condition name="host" operator="equal">tomhoon.duckdns.org</condition>
+    <from>^(.*)$</from>
+    <to type="redirect">http://localhost:8080</to>
+</rule>
+</urlrewrite>

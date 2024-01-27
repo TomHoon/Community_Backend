@@ -100,6 +100,12 @@
 		    <artifactId>spring-boot-starter-websocket</artifactId>
 		    <version>3.2.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.tuckey/urlrewritefilter -->
+		<dependency>
+		    <groupId>org.tuckey</groupId>
+		    <artifactId>urlrewritefilter</artifactId>
+		    <version>4.0.4</version>
+		</dependency>
 
 	</dependencies>
 

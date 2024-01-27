@@ -36,7 +36,7 @@ public class TestController {
 		return list;
 	}
 	
-	@GetMapping("/test")
+	@GetMapping("/api/test")
 	public String test() {
 		return "test value 입니다";
 	}
