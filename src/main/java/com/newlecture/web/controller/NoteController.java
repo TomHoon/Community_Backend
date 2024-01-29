@@ -26,17 +26,25 @@ public class NoteController {
 	public List<NoteEntity> getNoteById(@RequestBody NoteEntity nEnt) {
 		return nDao.getNoteById(nEnt);
 	}
+
 	@PostMapping("/findOneNote")
 	public NoteEntity findOneNote(@RequestBody NoteEntity nEnt) {
 		return nDao.findOneNote(nEnt);
 	}
+
 	@PostMapping("/updateReadDate")
 	public int updateReadDate(@RequestBody NoteEntity nEnt) {
 		return nDao.updateReadDate(nEnt);
 	}
+
 	@PostMapping("/deleteNote")
 	public int deleteNote(@RequestBody NoteEntity nEnt) {
 		return nDao.deleteNote(nEnt);
+	}
+
+	@PostMapping("/insertNote")
+	public int insertNote(@RequestBody NoteEntity nEnt) {
+		return nDao.insertNote(nEnt);
 	}
 
 }

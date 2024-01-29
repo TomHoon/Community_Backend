@@ -1,5 +1,7 @@
 package com.newlecture.web.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class NoteEntity {
@@ -11,6 +13,7 @@ public class NoteEntity {
 	String note_content;
 	String send_date;
 	String read_date;
+	String read_last_date;
 	String read_yn;
 	String send_del_yn;
 	String recv_del_yn;
@@ -63,13 +66,20 @@ public class NoteEntity {
 		this.send_date = send_date;
 	}
 
-
 	public String getRead_date() {
 		return read_date;
 	}
 
 	public void setRead_date(String read_date) {
 		this.read_date = read_date;
+	}
+
+	public String getRead_last_date() {
+		return read_last_date;
+	}
+
+	public void setRead_last_date(String read_last_date) {
+		this.read_last_date = read_last_date;
 	}
 
 	public String getRead_yn() {
