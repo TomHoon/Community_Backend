@@ -109,4 +109,8 @@
 		update member_tb 
 		
 	</update>
+
+	<select id="findIdNote" parameterType="com.newlecture.web.entity.MemberEntity">
+		select count(member_id) from member_tb where member_id =#{member_id};
+	</select>
 </mapper>

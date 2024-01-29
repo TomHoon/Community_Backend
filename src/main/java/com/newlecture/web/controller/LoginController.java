@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.newlecture.web.entity.NoteEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -228,4 +229,9 @@ public class LoginController {
 			return "수정실패";
 		}
 	}
+	@PostMapping("/findIdNote")
+	public int findIdNote(@RequestBody MemberEntity mEnt) {
+		return mDao.findIdNote(mEnt);
+	}
+
 }

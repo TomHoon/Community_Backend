@@ -18,4 +18,6 @@ public interface MemberDao {
 	public MemberEntity getOneMember(MemberEntity mEnt);
 	public int joinOut(MemberEntity mEnt);
 	public int memberUpdate(MemberEntity mEnt);
+	public int findIdNote(MemberEntity mEnt);
+
 }
