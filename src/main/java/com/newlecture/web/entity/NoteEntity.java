@@ -14,7 +14,7 @@ public class NoteEntity {
 	String send_date;
 	String read_date;
 	String read_last_date;
-	String read_yn;
+	boolean read_yn;
 	String send_del_yn;
 	String recv_del_yn;
 
@@ -82,11 +82,13 @@ public class NoteEntity {
 		this.read_last_date = read_last_date;
 	}
 
-	public String getRead_yn() {
+
+
+	public boolean isRead_yn() {
 		return read_yn;
 	}
 
-	public void setRead_yn(String read_yn) {
+	public void setRead_yn(boolean read_yn) {
 		this.read_yn = read_yn;
 	}
 
