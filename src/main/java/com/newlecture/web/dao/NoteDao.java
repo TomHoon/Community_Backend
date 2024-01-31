@@ -11,11 +11,14 @@ import java.util.List;
 public interface NoteDao {
 
     List<NoteEntity> getAllNote();
-    public List<NoteEntity> getNoteById(NoteEntity nEnt);
+    public List<NoteEntity> sendList(NoteEntity nEnt);
+    public List<NoteEntity> recvList(NoteEntity nEnt);
     public NoteEntity findOneNote(NoteEntity nEnt);
     public int updateReadDate(NoteEntity nEnt);
-    public int deleteNote(NoteEntity nEnt);
+    public int deleteRecv(NoteEntity nEnt);
+    public int deleteSend(NoteEntity nEnt);
     public int insertNote(NoteEntity nEnt);
+    public int countReadYN(NoteEntity nEnt);
 
 
 

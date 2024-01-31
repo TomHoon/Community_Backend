@@ -82,8 +82,6 @@ public class NoteEntity {
 		this.read_last_date = read_last_date;
 	}
 
-
-
 	public boolean isRead_yn() {
 		return read_yn;
 	}
