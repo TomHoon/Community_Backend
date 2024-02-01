@@ -25,7 +25,7 @@
 	</select>
 	<update id="updateReadDate" parameterType="com.newlecture.web.entity.NoteEntity">
 		UPDATE note_tb
-		set read_yn = 1, read_last_date = #{read_last_date}
+		set read_yn = 1, read_last_date = #{read_last_date}	,read_date = #{read_date}
 		where note_idx = #{note_idx};
 	</update>
 	<update id="deleteSend" parameterType="com.newlecture.web.entity.NoteEntity">
@@ -36,8 +36,8 @@
 	</update>
 
 	<insert id="insertNote" parameterType="com.newlecture.web.entity.NoteEntity">
-		insert into note_tb (send_id, recv_id, note_title, note_content, read_date, read_last_date)
-		values (#{send_id}, #{recv_id}, #{note_title}, #{note_content}, #{read_date}, #{read_last_date})
+		insert into note_tb (send_id, recv_id, note_title, note_content, send_date)
+		values (#{send_id}, #{recv_id}, #{note_title}, #{note_content}, #{send_date})
 	</insert>
 	<select id="countReadYN" parameterType="com.newlecture.web.entity.NoteEntity">
 		select count(read_yn) from note_tb where recv_id = #{recv_id} and read_yn = 0;
