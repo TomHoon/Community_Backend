@@ -40,7 +40,7 @@
 		values (#{send_id}, #{recv_id}, #{note_title}, #{note_content}, #{read_date}, #{read_last_date})
 	</insert>
 	<select id="countReadYN" parameterType="com.newlecture.web.entity.NoteEntity">
-		select count(read_yn) from note_tb where recv_id = #{recv_id};
+		select count(read_yn) from note_tb where recv_id = #{recv_id} and read_yn = 0;
 	</select>
 
 
