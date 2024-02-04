@@ -59,8 +59,8 @@ public class NoteController {
 	public int countReadYN(@RequestBody NoteEntity nEnt) {
 		return nDao.countReadYN(nEnt);
 	}
-	public int countRead(@RequestBody NoteEntity nEnt) {
-		return nDao.countRead(nEnt);
+	public int countRecv(@RequestBody NoteEntity nEnt) {
+		return nDao.countRecv(nEnt);
 	}
 	public int countSend(@RequestBody NoteEntity nEnt) {
 		return nDao.countSend(nEnt);

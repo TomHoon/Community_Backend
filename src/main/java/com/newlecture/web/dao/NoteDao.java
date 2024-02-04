@@ -19,7 +19,7 @@ public interface NoteDao {
     public int deleteSend(NoteEntity nEnt);
     public int insertNote(NoteEntity nEnt);
     public int countReadYN(NoteEntity nEnt);
-    public int countRead(NoteEntity nEnt);
+    public int countRecv(NoteEntity nEnt);
     public int countSend(NoteEntity nEnt);
 
 

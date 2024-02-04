@@ -42,7 +42,7 @@
 	<select id="countReadYN" parameterType="com.newlecture.web.entity.NoteEntity">
 		select count(read_yn) from note_tb where recv_id = #{recv_id} and read_yn = 0;
 	</select>
-	<select id="countRead" parameterType="com.newlecture.web.entity.NoteEntity">
+	<select id="countRecv" parameterType="com.newlecture.web.entity.NoteEntity">
 		select count(*) from note_tb where recv_id = #{recv_id} and recv_del_yn = 'N';
 	</select>
 	<select id="countSend" parameterType="com.newlecture.web.entity.NoteEntity">
