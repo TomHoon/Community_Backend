@@ -12,15 +12,12 @@
 		from note_tb
 		where send_id = #{send_id}
 		and	send_del_yn	= 'N'
-		order by note_idx = #{note_idx} desc;
 	</select>
 	<select id="recvList" parameterType="com.newlecture.web.entity.NoteEntity">
 		select *
 		from note_tb
 		where recv_id = #{recv_id}
 		and	recv_del_yn	= 'N'
-		order by note_idx = #{note_idx} desc;
-
 	</select>
 	<select id="findOneNote" parameterType="com.newlecture.web.entity.NoteEntity">
 		select * from note_tb
