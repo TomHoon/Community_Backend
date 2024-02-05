@@ -62,6 +62,8 @@ public class CommentController {
 			ArrayList<String> up_arr_list = new ArrayList<String>(Arrays.asList(up_temp_arr));
 			ArrayList<String> down_arr_list = new ArrayList<String>(Arrays.asList(down_temp_arr));
 			
+			String list = findComment.getComment_down_id_list();
+			
 			// 추천을 클릭해놓은 상태라면 지운다.
 			if (up_list != null && up_arr_list.contains(downId)) { // 추천이 눌려있는 경우
 
