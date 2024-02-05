@@ -67,5 +67,9 @@ public class NoteController {
 	public int countSend(@RequestBody NoteEntity nEnt) {
 		return nDao.countSend(nEnt);
 	}
+	@PostMapping("/sendListChk")
+	public List<NoteEntity> sendListChk(@RequestBody NoteEntity nEnt) {
+		return nDao.sendListChk(nEnt);
+	}
 
 }

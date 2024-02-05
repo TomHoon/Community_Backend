@@ -48,6 +48,9 @@
 	<select id="countSend" parameterType="com.newlecture.web.entity.NoteEntity">
 		select count(*) from note_tb where send_id = #{send_id} and send_del_yn = 'N';
 	</select>
+	<select id="sendListChk" parameterType="com.newlecture.web.entity.NoteEntity">
+		select distinct recv_id, send_id from note_tb where send_id = #{send_id};
+	</select>
 
 
 </mapper>

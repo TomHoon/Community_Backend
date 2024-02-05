@@ -21,6 +21,7 @@ public interface NoteDao {
     public int countReadYN(NoteEntity nEnt);
     public int countRecv(NoteEntity nEnt);
     public int countSend(NoteEntity nEnt);
+    public List<NoteEntity> sendListChk(NoteEntity nEnt);
 
 
 
