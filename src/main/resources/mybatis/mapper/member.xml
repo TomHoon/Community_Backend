@@ -32,7 +32,8 @@
 			member_amnd_date,
 			member_address,
 			member_del_yn,
-			file_idx
+			file_idx,
+			kakao_YN
 			)
 			VALUES
 			(
@@ -47,7 +48,8 @@
 			now(),
 			#{member_address},
 			#{member_del_yn},
-			#{file_idx}
+			#{file_idx},
+			'N'
 			);
 					
 	</insert>

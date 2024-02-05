@@ -15,7 +15,8 @@ public class MemberEntity {
 	String detailAddress;
 	String member_del_yn;
 	String file_idx;
-	
+	String kakao_YN;
+
 	public String getFile_idx() {
 		return file_idx;
 	}
@@ -101,4 +102,11 @@ public class MemberEntity {
 		this.member_del_yn = member_del_yn;
 	}
 
+	public String getKakao_YN() {
+		return kakao_YN;
+	}
+
+	public void setKakao_YN(String kakao_YN) {
+		this.kakao_YN = kakao_YN;
+	}
 }
