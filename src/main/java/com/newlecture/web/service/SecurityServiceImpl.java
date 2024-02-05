@@ -38,6 +38,7 @@ public class SecurityServiceImpl implements SecurityService{
         return builder.compact();
 	}
 
+	// get password... using by token
 	@Override
 	public String getSubject(String token) {
         Claims claims = Jwts.parser()

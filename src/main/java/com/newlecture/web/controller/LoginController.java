@@ -24,7 +24,10 @@ import com.newlecture.web.entity.FileEntity;
 import com.newlecture.web.entity.MemberEntity;
 import com.newlecture.web.service.SecurityService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
+@Slf4j
 public class LoginController {
 	
 	@Autowired
@@ -232,6 +235,35 @@ public class LoginController {
 	@PostMapping("/findIdNote")
 	public int findIdNote(@RequestBody MemberEntity mEnt) {
 		return mDao.findIdNote(mEnt);
+	}
+	
+	@PostMapping("/checkToken")
+	public String checkToken(@RequestBody Map<String, String> request) {
+		String token = request.get("token");
+		String id = request.get("id");
+		
+		log.info(">>> request token: " + token);
+		log.info(">>> request id: " + id);
+		
+		// 아이디를 갖고서 비밀번호를 뽑기
+		MemberEntity mEnt = new MemberEntity();
+		mEnt.setMember_id(id);
+		MemberEntity res_entity = mDao.getOneMember(mEnt);
+		
+		if (res_entity.getMember_id() == null) {
+			log.info(">>> 일치하는 아이디가 없습니다");
+			return "일치하는 아이디가 없습니다";
+		}
+		
+		String req_password = securityService.getSubject(token); // 요청한 토큰의 패스워드값
+		
+		if (req_password.equals(res_entity.getMember_pw())) {
+			log.info(">>> 유효한 토큰입니다 ");
+			return "유효한 토큰입니다";
+		}
+
+		log.info(">>> 아이디가 존재하지만 유효하지 않은 토큰입니다");
+		return "아이디가 존재하지만 유효하지 않은 토큰입니다";
 	}
 
 }
