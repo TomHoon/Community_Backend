@@ -55,7 +55,7 @@ public class LoginController {
 			return map;
 		}
 		if (result > 0) {
-	        String token = securityService.createToken(mEnt.getMember_pw(), 1000 * 60 * 60 * 24L);    // 24시간
+	        String token = securityService.createToken(mEnt.getMember_pw(), 1000 * 60 * 60 * 1L);    // 24시간
 	        map.put("token", token);
 	        map.put("userid", mEnt.getMember_id());
 			return map;
