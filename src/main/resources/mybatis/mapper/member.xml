@@ -35,23 +35,20 @@
 			file_idx,
 			kakao_YN
 			)
-			VALUES
-			(
-			#{member_idx},
-			#{member_id},
-			#{member_pw},
-			#{member_name},
-			#{member_nickname},
-			#{member_phone},
-			#{member_email},
-			now(),
-			now(),
-			#{member_address},
-			#{member_del_yn},
-			#{file_idx},
-			'N'
-			);
-					
+			VALUES (#{member_idx},
+                    #{member_id},
+                    #{member_pw},
+                    #{member_name},
+                    #{member_nickname},
+                    #{member_phone},
+                    #{member_email},
+                    now(),
+                    now(),
+                    #{member_address},
+                    #{member_del_yn},
+                    #{file_idx},
+                    #{kakao_YN}
+				   )
 	</insert>
 	
 	<insert id="insertFile" parameterType="com.newlecture.web.entity.FileEntity">
@@ -95,6 +92,9 @@
 		<if test='!member_nickname.equals("")'>
 		   member_nickname = #{member_nickname},
 		</if>
+		<if test='!member_name.equals("")'>
+		   member_nickname = #{member_name},
+		</if>
 		<if test='!member_phone.equals("")'>
 		   member_phone = #{member_phone},
 		</if>
@@ -103,6 +103,9 @@
 		</if>
 		<if test='!member_address.equals("")'>
 		   member_address = #{member_address}
+		</if>
+		<if test='!file_idx.equals("")'>
+			file_idx = #{file_idx}
 		</if>
 		where member_id = #{member_id}
 	</update>
