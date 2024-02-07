@@ -19,5 +19,5 @@ public interface MemberDao {
 	public int joinOut(MemberEntity mEnt);
 	public int memberUpdate(MemberEntity mEnt);
 	public int findIdNote(MemberEntity mEnt);
-
+	public MemberEntity updateTokenBlacklist(MemberEntity mEnt);
 }
