@@ -16,6 +16,7 @@ public class MemberEntity {
 	String member_del_yn;
 	String file_idx;
 	String kakao_YN;
+	String token_blacklist;
 
 	public String getFile_idx() {
 		return file_idx;
@@ -108,5 +109,13 @@ public class MemberEntity {
 
 	public void setKakao_YN(String kakao_YN) {
 		this.kakao_YN = kakao_YN;
+	}
+
+	public String getToken_blacklist() {
+		return token_blacklist;
+	}
+
+	public void setToken_blacklist(String token_blacklist) {
+		this.token_blacklist = token_blacklist;
 	}
 }

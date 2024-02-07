@@ -2,12 +2,13 @@ package com.newlecture.web.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.newlecture.web.entity.NoteEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newlecture.web.dao.MemberDao;
 import com.newlecture.web.entity.FileEntity;
@@ -55,7 +54,7 @@ public class LoginController {
 			return map;
 		}
 		if (result > 0) {
-	        String token = securityService.createToken(mEnt.getMember_pw(), 1000 * 60 * 60 * 24L);    // 24시간
+	        String token = securityService.createToken(mEnt.getMember_pw(), 1000 * 60 * 60 * 1L);    // 24시간
 	        map.put("token", token);
 	        map.put("userid", mEnt.getMember_id());
 			return map;
@@ -236,6 +235,31 @@ public class LoginController {
 	public int findIdNote(@RequestBody MemberEntity mEnt) {
 		return mDao.findIdNote(mEnt);
 	}
+
+	@PostMapping("/logout")
+	public void logout(@RequestBody MemberEntity mEnt) {
+		MemberEntity logout_member = mDao.getOneMember(mEnt);
+		String _blacklist = logout_member.getToken_blacklist(); // check existed blacklist
+		
+		ArrayList<String> new_arrlist = new ArrayList<String>(); // 가공할 빈 arrayList 생성
+		
+		List<String> temp_blacklist = Arrays.asList(_blacklist.split(",")); // existed array list
+
+		// fixed size List라서 for로 돌려서 가변list 사용
+		for (int i = 0; i < temp_blacklist.size(); i ++ ) {
+			new_arrlist.add(temp_blacklist.get(i)); // 가공할 array list
+		}
+		new_arrlist.add(mEnt.getToken_blacklist()); // logout 시킬 토큰 저장
+
+		String joined_token_blacklist = String.join(",", new_arrlist); // arrayList -> String으로 변환
+		
+		// DB에 기존 + 만료시킬토큰 문자열을 저장 시작
+		MemberEntity ent_for_update = new MemberEntity();
+		ent_for_update.setToken_blacklist(joined_token_blacklist);
+		ent_for_update.setMember_id(mEnt.getMember_id());
+
+		mDao.updateTokenBlacklist(ent_for_update);
+	}
 	
 	@PostMapping("/checkToken")
 	public String checkToken(@RequestBody Map<String, String> request) {
@@ -258,6 +282,14 @@ public class LoginController {
 		String req_password = securityService.getSubject(token); // 요청한 토큰의 패스워드값
 		
 		if (req_password.equals(res_entity.getMember_pw())) {
+			MemberEntity ent_for_check_invalid_token = mDao.getOneMember(mEnt);
+			String[] str_list = ent_for_check_invalid_token.getToken_blacklist().split(",");
+			List<String> list = Arrays.asList(str_list);
+
+			if (list.indexOf(token) > -1) {
+				log.info(">>> 만료된 토큰입니다 ");
+				return "만료된 토큰입니다.";
+			}
 			log.info(">>> 유효한 토큰입니다 ");
 			return "유효한 토큰입니다";
 		}

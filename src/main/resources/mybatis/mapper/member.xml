@@ -115,12 +115,8 @@
 		where member_id = #{member_id}
 	</update>
 	
-	<update id="updateCommentIdx" parameterType="com.newlecture.web.entity.MemberEntity">
-		update member_tb 
-		
+	<update id="updateTokenBlacklist" parameterType="com.newlecture.web.entity.MemberEntity">
+		update member_tb set token_blackList = #{token_blackList}
+		where member_id = #{member_id}
 	</update>
-
-	<select id="findIdNote" parameterType="com.newlecture.web.entity.MemberEntity">
-		select count(member_id) from member_tb where member_id =#{member_id};
-	</select>
 </mapper>
