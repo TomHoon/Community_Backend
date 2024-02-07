@@ -86,27 +86,32 @@
 	<update id="memberUpdate" parameterType="com.newlecture.web.entity.MemberEntity">
 		update member_tb
 		set
-		<if test='!member_pw.equals("")'>
-		   member_pw = #{member_pw},
-		</if> 
+		    member_pw        = #{member_pw},
+			member_nickname  = #{member_nickname},
+			member_name  = #{member_name},
+			member_phone     = #{member_phone},
+			member_email     = #{member_email},
+			member_address   = #{member_address},
+
+		<!--<if test='!member_pw.equals("")'>
+			member_pw = #{member_pw},
+		</if>
 		<if test='!member_nickname.equals("")'>
-		   member_nickname = #{member_nickname},
+			member_nickname = #{member_nickname},
 		</if>
 		<if test='!member_name.equals("")'>
-		   member_nickname = #{member_name},
+			member_name = #{member_name},
 		</if>
 		<if test='!member_phone.equals("")'>
-		   member_phone = #{member_phone},
+			member_phone = #{member_phone},
 		</if>
 		<if test='!member_email.equals("")'>
-		   member_email = #{member_email},
+			member_email = #{member_email},
 		</if>
 		<if test='!member_address.equals("")'>
-		   member_address = #{member_address}
-		</if>
-		<if test='!file_idx.equals("")'>
-			file_idx = #{file_idx}
-		</if>
+			member_address = #{member_address},
+		</if>-->
+			member_amnd_date = now()
 		where member_id = #{member_id}
 	</update>
 	
