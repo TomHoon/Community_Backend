@@ -23,6 +23,7 @@ import com.newlecture.web.entity.FileEntity;
 import com.newlecture.web.entity.MemberEntity;
 import com.newlecture.web.service.SecurityService;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
@@ -35,12 +36,14 @@ public class LoginController {
 	@Autowired
 	private SecurityService securityService;
 	
+	@ApiOperation(value = "모든 회원 정보 조회", notes = "")
 	@GetMapping("/getMemberAll")
 	public List<MemberEntity> getMemberAll() {
 		List<MemberEntity> list = mDao.getMemberAll();
 		return list;
 	}
 	
+	@ApiOperation(value = "로그인", notes = "")
 	@PostMapping("/loginMember")
 	public Map<String, Object> loginMember(@RequestBody MemberEntity mEnt) {
 		int result;
@@ -65,6 +68,7 @@ public class LoginController {
 	}
 	
 	// 회원가입
+	@ApiOperation(value = "회원가입", notes = "")
 	@PostMapping("/joinMember")
 	public int insertMember(@RequestPart(value="file",required = false) MultipartFile mFile, @RequestPart String param) throws IllegalStateException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
@@ -163,11 +167,13 @@ public class LoginController {
 		return mDao.getFileData(fEnt);
 	}
 	
+	@ApiOperation(value = "하나의 회원정보 조회", notes = "")
 	@PostMapping("/getOneMember")
 	public MemberEntity getOneMember(@RequestBody MemberEntity mEnt) {
 		return mDao.getOneMember(mEnt);
 	}
 	
+	@ApiOperation(value = "회원탈퇴", notes = "")
 	@PostMapping("/joinOut")
 	public String joinOut(@RequestBody MemberEntity mEnt) {
 		if (mDao.joinOut(mEnt) == 1) {
@@ -177,6 +183,7 @@ public class LoginController {
 		}
 	}
 	
+	@ApiOperation(value = "회원정보 업데이트", notes = "")
 	@PostMapping("/memberUpdate")
 	public String memberUpdate(@RequestPart(value="file",required = false) MultipartFile mFile, @RequestPart String param) throws IllegalStateException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
@@ -231,11 +238,14 @@ public class LoginController {
 			return "수정실패";
 		}
 	}
+	
+	@ApiOperation(value = "특정 쪽지 조회", notes = "")
 	@PostMapping("/findIdNote")
 	public int findIdNote(@RequestBody MemberEntity mEnt) {
 		return mDao.findIdNote(mEnt);
 	}
-
+	
+	@ApiOperation(value = "로그아웃", notes = "")
 	@PostMapping("/logout")
 	public void logout(@RequestBody MemberEntity mEnt) {
 		MemberEntity logout_member = mDao.getOneMember(mEnt);
@@ -261,6 +271,7 @@ public class LoginController {
 		mDao.updateTokenBlacklist(ent_for_update);
 	}
 	
+	@ApiOperation(value = "토큰 유효성 조회", notes = "")
 	@PostMapping("/checkToken")
 	public String checkToken(@RequestBody Map<String, String> request) {
 		String token = request.get("token");

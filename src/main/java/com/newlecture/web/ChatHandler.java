@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
+
 public class ChatHandler extends TextWebSocketHandler {
 	
 	HashMap<String, WebSocketSession> sessionMap = new HashMap<>();

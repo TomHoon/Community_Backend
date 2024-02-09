@@ -2,8 +2,8 @@
 package com.newlecture.web.controller;
 
 import java.io.File;
-
 import java.io.IOException;
+import java.lang.annotation.Repeatable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,10 +32,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newlecture.web.dao.BoardDao;
 import com.newlecture.web.entity.BoardEntity;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
+@Api(tags = {"API 정보를 제공하는 Controller"})
 public class BoardController {
 
 	@Value("${temp-img-url}")
@@ -49,8 +53,9 @@ public class BoardController {
 
 	@Autowired
 	BoardDao bDao;
-
-	@PostMapping("/getBoardAll")
+	
+	@ApiOperation(value = "모든 게시글 조회", notes = "모든 게시글 조회")
+	@PostMapping("/api/getBoardAll")
 	public List<BoardEntity> getBoardAll(@RequestBody BoardEntity bEntity) {
 		log.info("addBoard >>> ");
 		if (bEntity.getOrder().isEmpty()) {
@@ -61,42 +66,49 @@ public class BoardController {
 		return list;
 	}
 
+	@ApiOperation(value = "제목으로 게시글 조회", notes = "제목으로 게시글 조회")
 	@PostMapping("/searchBoard")
 	public List<BoardEntity> searchBoard(@RequestBody BoardEntity bEntity) {
 		List<BoardEntity> list = bDao.searchBoard(bEntity);
 		return list;
 	}
 
+	@ApiOperation(value = "아이디로 게시글 조회", notes = "아이디로 게시글 조회")
 	@PostMapping("/getBoardById")
 	public BoardEntity getBoardById(@RequestBody BoardEntity bEntity) {
 		BoardEntity bEnt = bDao.getBoardById(bEntity);
 		return bEnt;
 	}
 
+	@ApiOperation(value = "게시글 업데이트", notes = "구분,제목,내용,아이디가 필요")
 	@PostMapping("/updateBoard")
 	public int updateBoard(@RequestBody BoardEntity bEntity) {
 		int result = bDao.updateBoard(bEntity);
 		return result;
 	}
-
+	
+	@ApiOperation(value = "게시글 조회수 업데이트", notes = "아이디 필요")
 	@PostMapping("/updateHitBoard")
 	public int updateHitBoard(@RequestBody BoardEntity bEntity) {
 		int result = bDao.updateHitBoard(bEntity);
 		return result;
 	}
 
+	@ApiOperation(value = "게시글 삭제", notes = "아이디 필요")
 	@PostMapping("/deleteBoard")
 	public int deleteBoard(@RequestBody BoardEntity bEntity) {
 		int result = bDao.deleteBoard(bEntity);
 		return result;
 	}
 
+	@ApiOperation(value = "게시글 좋아요 업데이트", notes = "아이디 필요")
 	@PostMapping("/updateRecommendBoard")
 	public int updateRecommendBoard(@RequestBody BoardEntity bEntity) {
 		int result = bDao.updateRecommendHitBoard(bEntity);
 		return result;
 	}
 
+	@ApiOperation(value = "사진 미리보기용 api", notes = "아이디 필요")
 	@PostMapping("/tempImg")
 	public String tempImg(@RequestParam MultipartFile mFile) throws IllegalStateException, IOException {
 		// 시간과 originalFilename으로 매핑 시켜서 src 주소를 만들어 낸다.
@@ -121,7 +133,8 @@ public class BoardController {
 
 		return "/upload/" + sb.toString(); // nas
 	}
-
+	
+	@ApiOperation(value = "게시글 등록", notes = "")
 	@PostMapping("/addBoard")
 	public int pushImage(@RequestPart(required = false) MultipartFile uploadFile, @RequestPart String param)
 			throws JsonMappingException, JsonProcessingException {
