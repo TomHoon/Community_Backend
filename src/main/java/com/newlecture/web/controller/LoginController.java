@@ -21,9 +21,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newlecture.web.dao.MemberDao;
 import com.newlecture.web.entity.FileEntity;
 import com.newlecture.web.entity.MemberEntity;
+import com.newlecture.web.service.EncryptService;
 import com.newlecture.web.service.SecurityService;
 
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
@@ -36,18 +36,25 @@ public class LoginController {
 	@Autowired
 	private SecurityService securityService;
 	
-//	@ApiOperation(value = "모든 회원 정보 조회", notes = "")
+	@Autowired
+	private EncryptService encService;
+	
 	@GetMapping("/getMemberAll")
 	public List<MemberEntity> getMemberAll() {
 		List<MemberEntity> list = mDao.getMemberAll();
 		return list;
 	}
 	
-//	@ApiOperation(value = "로그인", notes = "")
 	@PostMapping("/loginMember")
 	public Map<String, Object> loginMember(@RequestBody MemberEntity mEnt) {
 		int result;
 		Map<String, Object> map = new HashMap<>();
+		
+		String pw = mEnt.getMember_pw();
+		String salt = "tomhoon";
+		String encrypted = encService.getEncrypt(pw, salt);
+		
+		mEnt.setMember_pw(encrypted);
 		try {
 			result = mDao.loginMember(mEnt);
 		} catch (Exception e) {
@@ -57,7 +64,11 @@ public class LoginController {
 			return map;
 		}
 		if (result > 0) {
-	        String token = securityService.createToken(mEnt.getMember_pw(), 1000 * 60 * 60 * 1L);    // 24시간
+			// 1second = 1000 ms
+			// 1 minute = 60 second = 1000 * 60
+			// 30 minute = 1000 * 30
+			// 1 hour = 60 minute = 60 second * 60 = 1000* 60 * 60
+	        String token = securityService.createToken(mEnt.getMember_pw(), 1000 * 30);    // 30 minute
 	        map.put("token", token);
 	        map.put("userid", mEnt.getMember_id());
 			return map;
@@ -68,11 +79,19 @@ public class LoginController {
 	}
 	
 	// 회원가입
-//	@ApiOperation(value = "회원가입", notes = "")
 	@PostMapping("/joinMember")
 	public int insertMember(@RequestPart(value="file",required = false) MultipartFile mFile, @RequestPart String param) throws IllegalStateException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
         MemberEntity mEnt = mapper.readValue(param, MemberEntity.class);
+        
+        // 비밀번호 난수화 처리시작
+        String pw = mEnt.getMember_pw();
+//        String salt = encService.getSalt();
+        String salt = "tomhoon";
+        
+        String encrypted = encService.getEncrypt(pw, salt);
+        mEnt.setMember_pw(encrypted);
+        // 비밀번호 난수화 처리끝
         
         if (mFile != null) {
         	// 시간과 originalFilename으로 매핑 시켜서 src 주소를 만들어 낸다.
@@ -167,13 +186,11 @@ public class LoginController {
 		return mDao.getFileData(fEnt);
 	}
 	
-//	@ApiOperation(value = "하나의 회원정보 조회", notes = "")
 	@PostMapping("/getOneMember")
 	public MemberEntity getOneMember(@RequestBody MemberEntity mEnt) {
 		return mDao.getOneMember(mEnt);
 	}
 	
-//	@ApiOperation(value = "회원탈퇴", notes = "")
 	@PostMapping("/joinOut")
 	public String joinOut(@RequestBody MemberEntity mEnt) {
 		if (mDao.joinOut(mEnt) == 1) {
@@ -183,7 +200,6 @@ public class LoginController {
 		}
 	}
 	
-//	@ApiOperation(value = "회원정보 업데이트", notes = "")
 	@PostMapping("/memberUpdate")
 	public String memberUpdate(@RequestPart(value="file",required = false) MultipartFile mFile, @RequestPart String param) throws IllegalStateException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
@@ -238,14 +254,11 @@ public class LoginController {
 			return "수정실패";
 		}
 	}
-	
-//	@ApiOperation(value = "특정 쪽지 조회", notes = "")
 	@PostMapping("/findIdNote")
 	public int findIdNote(@RequestBody MemberEntity mEnt) {
 		return mDao.findIdNote(mEnt);
 	}
-	
-//	@ApiOperation(value = "로그아웃", notes = "")
+
 	@PostMapping("/logout")
 	public void logout(@RequestBody MemberEntity mEnt) {
 		MemberEntity logout_member = mDao.getOneMember(mEnt);
@@ -270,8 +283,7 @@ public class LoginController {
 
 		mDao.updateTokenBlacklist(ent_for_update);
 	}
-	
-//	@ApiOperation(value = "토큰 유효성 조회", notes = "")
+
 	@PostMapping("/checkToken")
 	public String checkToken(@RequestBody Map<String, String> request) {
 		String token = request.get("token");
@@ -290,17 +302,25 @@ public class LoginController {
 			return "일치하는 아이디가 없습니다";
 		}
 		
-		String req_password = securityService.getSubject(token); // 요청한 토큰의 패스워드값
+		String req_password = null;
+		
+		try {
+			req_password = securityService.getSubject(token); // 요청한 토큰의 패스워드값
+		} catch(Exception e )  {
+			return "시간이 경과하여 만료된 토큰입니다";
+		}
 		
 		if (req_password.equals(res_entity.getMember_pw())) {
 			MemberEntity ent_for_check_invalid_token = mDao.getOneMember(mEnt);
-			String[] str_list = ent_for_check_invalid_token.getToken_blacklist().split(",");
-			List<String> list = Arrays.asList(str_list);
-
-			if (list.indexOf(token) > -1) {
-				log.info(">>> 만료된 토큰입니다 ");
-				return "만료된 토큰입니다.";
+			if (ent_for_check_invalid_token.getToken_blacklist() != null) {
+				String[] str_list = ent_for_check_invalid_token.getToken_blacklist().split(",");
+				List<String> list = Arrays.asList(str_list);
+				if (list.indexOf(token) > -1) {
+					log.info(">>> 만료된 토큰입니다 ");
+					return "만료된 토큰입니다.";
+				}
 			}
+
 			log.info(">>> 유효한 토큰입니다 ");
 			return "유효한 토큰입니다";
 		}

@@ -39,6 +39,7 @@ public class SecurityServiceImpl implements SecurityService{
 	}
 
 	// get password... using by token
+	// if expired, throw exception 발생함
 	@Override
 	public String getSubject(String token) {
         Claims claims = Jwts.parser()
