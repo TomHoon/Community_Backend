@@ -25,25 +25,25 @@ public class CommentController {
 	@Autowired
 	MemberDao mDao;
 
-	@ApiOperation(value = "모든 댓글 조회", notes = "")
+//	@ApiOperation(value = "모든 댓글 조회", notes = "")
 	@GetMapping("/getAllComment")
 	public List<CommentEntity> getAllComment() {
 		return cDao.getAllComment();
 	}
 
-	@ApiOperation(value = "게시글에 달린 댓글 추가", notes = "")
+//	@ApiOperation(value = "게시글에 달린 댓글 추가", notes = "")
 	@PostMapping("/getCommentByBoard")
 	public List<CommentEntity> getCommentByBoard(@RequestBody CommentEntity cEnt) {
 		return cDao.getCommentByBoard(cEnt);
 	}
 
-	@ApiOperation(value = "게시글에 달린 댓글 조회", notes = "아이디 필요")
+//	@ApiOperation(value = "게시글에 달린 댓글 조회", notes = "아이디 필요")
 	@PostMapping("/addComment")
 	public int addComment(@RequestBody CommentEntity cEnt) {
 		return cDao.addComment(cEnt);
 	}
 
-	@ApiOperation(value = "추천수 업다운", notes = "추천or비추천, 댓글 pk 필요")
+//	@ApiOperation(value = "추천수 업다운", notes = "추천or비추천, 댓글 pk 필요")
 	@PostMapping("/recommendUpDown")
 	public int recommendUpDown(@RequestBody CommentEntity cEnt) {
 
@@ -190,19 +190,19 @@ public class CommentController {
 
 	}
 	
-	@ApiOperation(value = "댓글 삭제", notes = "댓글 pk")
+//	@ApiOperation(value = "댓글 삭제", notes = "댓글 pk")
 	@PostMapping("/deleteComment")
 	public int deleteComment(@RequestBody CommentEntity cEnt) {
 		return cDao.deleteComment(cEnt);
 	}
 
-	@ApiOperation(value = "댓글 pk로 댓글 모든 정보 조회", notes = "댓글 pk")
+//	@ApiOperation(value = "댓글 pk로 댓글 모든 정보 조회", notes = "댓글 pk")
 	@PostMapping("/findOneComment")
 	public CommentEntity findOneComment(@RequestBody CommentEntity cEnt) {
 		return cDao.findOneComment(cEnt);
 	}
 
-	@ApiOperation(value = "댓글의 추천을 누른 리스트 수정", notes = "리스트, comment_idx 필요")
+//	@ApiOperation(value = "댓글의 추천을 누른 리스트 수정", notes = "리스트, comment_idx 필요")
 	@PostMapping("/changeUpList")
 	public int changeUpList(@RequestBody CommentEntity cEnt) {
 		return cDao.changeUpList(cEnt);
