@@ -51,7 +51,7 @@
 				   )
 	</insert>
 	
-	<insert id="insertFile" parameterType="com.newlecture.web.entity.FileEntity">
+	<insert id="insertFile" parameterType="com.newlecture.web.entity.FileEntity" useGeneratedKeys="true" keyProperty="file_idx">
 		INSERT INTO file_tb
 			(
 			file_name,
