@@ -30,11 +30,18 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newlecture.web.dao.BoardDao;
 import com.newlecture.web.entity.BoardEntity;
+import com.newlecture.web.entity.SecretEntity;
 
 import lombok.extern.slf4j.Slf4j;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
+import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
+import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
 
 @Slf4j
 @RestController
@@ -45,7 +52,7 @@ public class BoardController {
     @Autowired
     private AmazonS3Client amazonS3Client;
     
-    @Value("${cloud.aws.s3.bucket}")
+//    @Value("${cloud.aws.s3.bucket}")
     private String bucket;
  // aws config end
 	
@@ -251,11 +258,14 @@ public class BoardController {
      * @param uploadFile : 업로드할 파일
      * @param fileName : 업로드할 파일 이름
      * @return 업로드 경로
+     * @throws JsonProcessingException 
+     * @throws JsonMappingException 
      */
-    public String putS3(File uploadFile, String fileName) {
-        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(
+    public String putS3(File uploadFile, String fileName) throws JsonMappingException, JsonProcessingException {
+    	SecretEntity sEnt = getSecret();
+        amazonS3Client.putObject(new PutObjectRequest(sEnt.getBucket(), fileName, uploadFile).withCannedAcl(
                 CannedAccessControlList.PublicRead));
-        return amazonS3Client.getUrl(bucket, fileName).toString();
+        return amazonS3Client.getUrl(sEnt.getBucket(), fileName).toString();
     }
         
     /**
@@ -263,11 +273,13 @@ public class BoardController {
      * 영어 파일만 삭제 가능 -> 한글 이름 파일은 안됨
      */
     public void deleteS3(String filePath) throws Exception {
+    	SecretEntity sEnt = getSecret();
+    	
         try{
             String key = filePath.substring(56); // 폴더/파일.확장자
 
             try {
-                amazonS3Client.deleteObject(bucket, key);
+                amazonS3Client.deleteObject(sEnt.getBucket(), key);
             } catch (AmazonServiceException e) {
                 log.info(e.getErrorMessage());
             }
@@ -277,4 +289,36 @@ public class BoardController {
         }
         log.info("[S3Uploader] : S3에 있는 파일 삭제");
     }
+    
+	 public static SecretEntity getSecret() throws JsonMappingException, JsonProcessingException {
+			
+	     String secretName = "/secret/tom";
+	     Region region = Region.of("us-east-2");
+	
+	     // Create a Secrets Manager client
+	     SecretsManagerClient client = SecretsManagerClient.builder()
+	             .region(region)
+	             .build();
+	
+	     GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder()
+	             .secretId(secretName)
+	             .build();
+	
+	     GetSecretValueResponse getSecretValueResponse;
+	
+	     try {
+	         getSecretValueResponse = client.getSecretValue(getSecretValueRequest);
+	     } catch (Exception e) {
+	         // For a list of exceptions thrown, see
+	         // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+	         throw e;
+	     }
+	
+	     String secret = getSecretValueResponse.secretString();
+	     ObjectMapper mapper = new ObjectMapper();
+	     SecretEntity sEnt = new SecretEntity();
+	     sEnt = mapper.readValue(secret, SecretEntity.class);
+		
+	     return sEnt;
+	 }
 }
