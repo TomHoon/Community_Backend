@@ -11,6 +11,7 @@ import com.newlecture.web.entity.MemberEntity;
 public interface MemberDao {
 	public List<MemberEntity> getMemberAll();
 	public int joinMember(MemberEntity mEnt);
+	public int joinMember1(MemberEntity mEnt);
 	public int loginMember(MemberEntity mEnt);
 	public MemberEntity findMember(MemberEntity mEnt);
 	public int insertFile(FileEntity fEnt);

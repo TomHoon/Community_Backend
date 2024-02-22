@@ -119,4 +119,38 @@
 		update member_tb set token_blackList = #{token_blackList}
 		where member_id = #{member_id}
 	</update>
+	<select id="findIdNote" parameterType="com.newlecture.web.entity.MemberEntity">
+		select count(member_id) from member_tb where member_id =#{member_id};
+	</select>
+
+	<insert id="joinMember1" parameterType="com.newlecture.web.entity.MemberEntity">
+		INSERT INTO member_tb
+		(
+			member_idx,
+			member_id,
+			member_pw,
+			member_name,
+			member_nickname,
+			member_phone,
+			member_email,
+			member_reg_date,
+			member_amnd_date,
+			member_address,
+			member_del_yn,
+			kakao_YN
+		)
+		VALUES (#{member_idx},
+				#{member_id},
+				#{member_pw},
+				#{member_name},
+				#{member_nickname},
+				#{member_phone},
+				#{member_email},
+				now(),
+				now(),
+				#{member_address},
+				#{member_del_yn},
+				#{kakao_YN}
+			   )
+	</insert>
 </mapper>

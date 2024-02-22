@@ -329,4 +329,26 @@ public class LoginController {
 		return "아이디가 존재하지만 유효하지 않은 토큰입니다";
 	}
 
+	@PostMapping("/joinMember1")
+	public int joinMember1(@RequestBody MemberEntity mEnt) throws IllegalStateException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+
+		// 비밀번호 난수화 처리시작
+		String pw = mEnt.getMember_pw();
+//        String salt = encService.getSalt();
+		String salt = "tomhoon";
+
+		String encrypted = encService.getEncrypt(pw, salt);
+		mEnt.setMember_pw(encrypted);
+		// 비밀번호 난수화 처리끝
+
+		int result;
+		try {
+			result = mDao.joinMember1(mEnt);
+		} catch (Exception e ) {
+			result = -1;
+			System.out.println("e : " + e);
+		}
+		return result;
+	}
 }
