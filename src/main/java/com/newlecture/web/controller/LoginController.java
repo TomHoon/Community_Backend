@@ -2,6 +2,7 @@ package com.newlecture.web.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -20,32 +21,25 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newlecture.web.dao.MemberDao;
 import com.newlecture.web.entity.FileEntity;
 import com.newlecture.web.entity.MemberEntity;
-import com.newlecture.web.entity.SecretEntity;
 import com.newlecture.web.service.EncryptService;
+import com.newlecture.web.service.S3UploadService;
 import com.newlecture.web.service.SecurityService;
 
 import lombok.extern.slf4j.Slf4j;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
-import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
-import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
 
 @RestController
 @Slf4j
 public class LoginController {
 	
+//    @Autowired
+//    private AmazonS3Client amazonS3Client;
+    
     @Autowired
-    private AmazonS3Client amazonS3Client;
+    S3UploadService s3Svc;
     
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -100,7 +94,7 @@ public class LoginController {
 	
 	// 회원가입
 	@PostMapping("/joinMember")
-	public int insertMember(@RequestParam MultipartFile mFile, @RequestPart String param) throws IllegalStateException, IOException {
+	public int insertMember(@RequestPart(required = false) MultipartFile mFile, @RequestPart String param) throws IllegalStateException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
         MemberEntity mEnt = mapper.readValue(param, MemberEntity.class);
         
@@ -114,26 +108,19 @@ public class LoginController {
         // 비밀번호 난수화 처리끝
 
         if (mFile != null) {
+//        	SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMddHHmm");
+//        	 Date now = new Date();         
+//        	 String nowTime1 = sdf1.format(now);
         	
-        	// aws - user.home
-        	// window - user.dir
-        	String fileName = UUID.randomUUID() + mFile.getOriginalFilename();
-        	String realDirFileName = System.getProperty("user.home") + "/" + fileName;
-        	File file = new File(realDirFileName);
-        	mFile.transferTo(file);
-        	
-        	String saveDir = "static/upload" + realDirFileName;
-        	putS3(file, saveDir);
-        	
+        	String fileURL = s3Svc.saveFile(mFile);
         	FileEntity fEnt = new FileEntity();
         	fEnt.setFile_name(mFile.getOriginalFilename());
-        	fEnt.setFile_path(saveDir);
+        	fEnt.setFile_path(fileURL);
         	mDao.insertFile(fEnt);
         	
         	String input_fileIdx = getFileData(fEnt).getFile_idx();
         	
         	mEnt.setFile_idx(input_fileIdx);
-        	file.delete();
         }
         
 		int result;
@@ -145,78 +132,42 @@ public class LoginController {
 		}
 		return result;
         
-//        if (mFile != null) {
-//        	// 시간과 originalFilename으로 매핑 시켜서 src 주소를 만들어 낸다.
-//            Date date = new Date();
-//            StringBuilder sb = new StringBuilder();
-//            
-//           	 sb.append(date.getTime());
-//           	 sb.append(mFile.getOriginalFilename());
-//
-//           	if (mFile != null) {
-//
-//            }
-//            
-//            // 🎈 이미지 파일 DB 넣기 시작
-//            FileEntity fEnt = new FileEntity();
-//            fEnt.setFile_name(sb.toString());
-//            
-//            // 로컬
-////            fEnt.setFile_path(sb.toString());
-//            
-//        	// 운영 & NAS
-//            fEnt.setFile_path("/upload/" + sb.toString());
-//            
-//    		mDao.insertFile(fEnt);
-//        	mEnt.setFile_idx(getFileData(fEnt).getFile_idx());
-//        	
-//        	// 🎈 이미지 파일 DB 넣기 끝
-//    	}
-//        
-//		int result;
-//		try {
-//			result = mDao.joinMember(mEnt);
-//		} catch (Exception e ) {
-//			result = -1;
-//			System.out.println("e : " + e);
-//		}
-//		return result;
 	}
 	
-	public FileEntity insertFile(@RequestPart MultipartFile uploadFile) throws IllegalStateException, IOException {
-        // 시간과 originalFilename으로 매핑 시켜서 src 주소를 만들어 낸다.
-        Date date = new Date();
-        StringBuilder sb = new StringBuilder();
-        
-       	 sb.append(date.getTime());
-       	 sb.append(uploadFile.getOriginalFilename());
-
-        if (!uploadFile.isEmpty()) {
-//        	◆◆로컬
-    	    File dest = new File("C://images/" + sb.toString());
-        	
-//        	◆◆nas
-//        	File dest = new File("/upload/" + sb.toString());
-        	
-//        	◆◆운영서버
-//        	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
-        	
-        	// error throw 함
-    	    uploadFile.transferTo(dest); 
-    	    
-    	    
-        }
-        FileEntity fEnt = new FileEntity();
-        fEnt.setFile_name(sb.toString());
-//        local
-//        fEnt.setFile_path("C://images/" + sb.toString());
-        
-//        prod
-        fEnt.setFile_path("/upload/" + sb.toString());
-        
-		mDao.insertFile(fEnt);
-		return getFileData(fEnt);
-	}
+//	public FileEntity insertFile(@RequestPart MultipartFile uploadFile) throws IllegalStateException, IOException {
+//        // 시간과 originalFilename으로 매핑 시켜서 src 주소를 만들어 낸다.
+//        Date date = new Date();
+//        StringBuilder sb = new StringBuilder();
+//        
+//       	 sb.append(date.getTime());
+//       	 sb.append(uploadFile.getOriginalFilename());
+//
+//        if (!uploadFile.isEmpty()) {
+////        	◆◆로컬
+////    	    File dest = new File("C://images/" + sb.toString());
+//        	
+////        	◆◆nas
+////        	File dest = new File("/upload/" + sb.toString());
+//        	
+////        	◆◆운영서버
+////        	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
+//        	
+//        	// error throw 함
+////    	    uploadFile.transferTo(dest); 
+//    	    
+//    	    
+//        }
+//        FileEntity fEnt = new FileEntity();
+//        fEnt.setFile_name(sb.toString());
+////        local
+////        fEnt.setFile_path("C://images/" + sb.toString());
+//        
+////        prod
+//        fEnt.setFile_path("/upload/" + sb.toString());
+//        
+//		mDao.insertFile(fEnt);
+//		return getFileData(fEnt);
+//	}
 	
 	public FileEntity getFileData(FileEntity fEnt) {
 		return mDao.getFileData(fEnt);
@@ -237,7 +188,7 @@ public class LoginController {
 	}
 	
 	@PostMapping("/memberUpdate")
-	public String memberUpdate(@RequestPart(value="file",required = false) MultipartFile mFile, @RequestPart String param) throws IllegalStateException, IOException {
+	public String memberUpdate(@RequestPart(required = false) MultipartFile mFile, @RequestPart String param) throws IllegalStateException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
         MemberEntity mEnt = mapper.readValue(param, MemberEntity.class);
         if (mFile != null) {
@@ -247,36 +198,21 @@ public class LoginController {
             
            	 sb.append(date.getTime());
            	 sb.append(mFile.getOriginalFilename());
-
+           	 
+           	String fileURL = null;
              if (mFile != null) {
-//            	◆◆로컬
-//            	File file = new File(".");
-//            	File dest = new File(file.getAbsolutePath()+ "src/main/webapp/" + sb.toString());        
-//            	File dest = new File("C:/Users/gnsdl/Documents/workspace-spring-tool-suite-4-4.16.0.RELEASE/CommunityProject-1/src/main/webapp/" + sb.toString());
-
-            	
-            	//피시방 임시, c파일에다 넣으면 접근이 안돼서 정적폴더에 잠시 넣은경우임
-//        	    File dest = new File("C://Users//Administrator//Downloads//CommunityProject//public/" + sb.toString());
-//            	◆◆운영서버
-//            	File dest = new File("/gnsdl2846/tomcat/webapps/upload/" + sb.toString());
-            	
-//            	◆◆NAS서버            	
-            	File dest = new File("/usr/local/tomcat/webapps/upload/" + sb.toString());
-
-            	// error throw 함
-        	    // 파일 생성되는 코드
-        	    mFile.transferTo(dest); 
+            	 fileURL = s3Svc.saveFile(mFile);
             }
             
             // 🎈 이미지 파일 DB 넣기 시작
             FileEntity fEnt = new FileEntity();
-            fEnt.setFile_name(sb.toString());
+            fEnt.setFile_name(mFile.getOriginalFilename());
             
             // 로컬
 //            fEnt.setFile_path(sb.toString());
             
         	// 운영 & NAS
-            fEnt.setFile_path("/upload/" + sb.toString());
+            fEnt.setFile_path(fileURL);
             
     		mDao.insertFile(fEnt);
         	mEnt.setFile_idx(getFileData(fEnt).getFile_idx());
@@ -284,6 +220,13 @@ public class LoginController {
         	// 🎈 이미지 파일 DB 넣기 끝
     	}
         
+		String pw = mEnt.getMember_pw();
+		String salt = "tomhoon";
+		String encrypted = encService.getEncrypt(pw, salt);
+		String token = securityService.createToken(mEnt.getMember_pw(), 1000 * 30);    // 30 minute
+		
+		mEnt.setMember_pw(encrypted);
+		
 		if (mDao.memberUpdate(mEnt) == 1) {
 			return "수정완료";
 		} else {
@@ -373,30 +316,30 @@ public class LoginController {
      * @throws JsonProcessingException 
      * @throws JsonMappingException 
      */
-    public String putS3(File uploadFile, String fileName) throws JsonMappingException, JsonProcessingException {
-        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(
-                CannedAccessControlList.PublicRead));
-        return amazonS3Client.getUrl(bucket, fileName).toString();
-    }
-        
-    /**
-     * S3에 있는 파일 삭제
-     * 영어 파일만 삭제 가능 -> 한글 이름 파일은 안됨
-     */
-    public void deleteS3(String filePath) throws Exception {
-        try{
-            String key = filePath.substring(56); // 폴더/파일.확장자
-
-            try {
-                amazonS3Client.deleteObject(bucket, key);
-            } catch (AmazonServiceException e) {
-                log.info(e.getErrorMessage());
-            }
-
-        } catch (Exception exception) {
-            log.info(exception.getMessage());
-        }
-        log.info("[S3Uploader] : S3에 있는 파일 삭제");
-    }
-    
+//    public String putS3(File uploadFile, String fileName) throws JsonMappingException, JsonProcessingException {
+//        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(
+//                CannedAccessControlList.PublicRead));
+//        return amazonS3Client.getUrl(bucket, fileName).toString();
+//    }
+//        
+//    /**
+//     * S3에 있는 파일 삭제
+//     * 영어 파일만 삭제 가능 -> 한글 이름 파일은 안됨
+//     */
+//    public void deleteS3(String filePath) throws Exception {
+//        try{
+//            String key = filePath.substring(56); // 폴더/파일.확장자
+//
+//            try {
+//                amazonS3Client.deleteObject(bucket, key);
+//            } catch (AmazonServiceException e) {
+//                log.info(e.getErrorMessage());
+//            }
+//
+//        } catch (Exception exception) {
+//            log.info(exception.getMessage());
+//        }
+//        log.info("[S3Uploader] : S3에 있는 파일 삭제");
+//    }
+//    
 }

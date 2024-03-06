@@ -10,13 +10,6 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.newlecture.web.entity.SecretEntity;
-
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
-import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
-import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
 
 @Configuration
 public class S3Config {
@@ -32,6 +25,7 @@ public class S3Config {
     
     @Bean
     public AmazonS3Client amazonS3Client() throws JsonMappingException, JsonProcessingException{
+    	System.out.println(">>>>>>###### " + region);
         BasicAWSCredentials awsCredentials = new BasicAWSCredentials(iamAccessKey, iamSecretKey);
         return (AmazonS3Client) AmazonS3ClientBuilder.standard()
                 .withRegion(region).enablePathStyleAccess()
@@ -39,6 +33,17 @@ public class S3Config {
                 .build();
     }
     
+//    @Bean
+//    public AmazonS3Client amazonS3Client() {
+//    	System.out.println(">>>>>>###### " + region);
+//        BasicAWSCredentials credentials = new BasicAWSCredentials(iamAccessKey, iamSecretKey);
+//
+//        return (AmazonS3Client) AmazonS3ClientBuilder
+//                .standard()
+//                .withRegion(region)
+//                .withCredentials(new AWSStaticCredentialsProvider(credentials))
+//                .build();
+//    }
  // Use this code snippet in your app.
  // If you need more information about configurations or implementing the sample
  // code, visit the AWS docs:

@@ -38,7 +38,7 @@ public class ChatHandler extends TextWebSocketHandler {
 	   String msg = message.getPayload();
 	   ObjectMapper mapper = new ObjectMapper();
 	   cEnt = mapper.readValue(msg, ChatEntity.class);
-	   
+	   System.out.println(">>> cEnt " + cEnt.getChatId());
 	   /**
 	    * ConcurrentModfiiacationException: null (동시 수정 오류) 
 	    * for문 -> iteration 사용

@@ -92,7 +92,9 @@
 			member_phone     = #{member_phone},
 			member_email     = #{member_email},
 			member_address   = #{member_address},
-
+		<if test='!file_idx.equals("")'>
+			file_idx = #{file_idx},
+		</if>
 		<!--<if test='!member_pw.equals("")'>
 			member_pw = #{member_pw},
 		</if>

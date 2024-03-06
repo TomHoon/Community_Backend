@@ -124,17 +124,12 @@
 		    <artifactId>springfox-swagger2</artifactId>
 		    <version>2.9.2</version>
 		</dependency>
-		<dependency>
-		    <groupId>org.springframework.cloud</groupId>
-		    <artifactId>spring-cloud-starter-aws</artifactId>
-		    <version>2.2.1.RELEASE</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/software.amazon.awssdk/secretsmanager -->
-		<dependency>
-		    <groupId>software.amazon.awssdk</groupId>
-		    <artifactId>secretsmanager</artifactId>
-		    <version>2.24.5</version>
-		</dependency>
+<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-aws -->
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-aws</artifactId>
+    <version>2.2.6.RELEASE</version>
+</dependency>
 
 	</dependencies>
 
